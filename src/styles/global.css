@@ -176,7 +176,7 @@ a:not(.button):not(.wordmark):not(.logo):not(.nav-link):hover {
 }
 
 .logo--sm {
-  --logo-size: 1rem;
+  --logo-size: 1.5rem;
   --logo-cut-thickness: 0.095em;
 }
 

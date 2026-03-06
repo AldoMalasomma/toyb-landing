@@ -4,8 +4,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 export const prerender = true;
 
-const variants: Array<"slice" | "bar"> = ["slice", "bar"];
-const sizes: Array<"sm" | "md" | "lg"> = ["sm", "md", "lg"];
+const variants: Array<"slice" | "bar"> = ["slice"];
+const sizes: Array<"sm" | "md" | "lg"> = ["sm"];
 ---
 
 <BaseLayout
@@ -16,7 +16,7 @@ const sizes: Array<"sm" | "md" | "lg"> = ["sm", "md", "lg"];
   <section class="section logo-lab" aria-labelledby="logo-lab-title">
     <header class="section-head">
       <h1 id="logo-lab-title">Logo Lab</h1>
-      <p>Pick the one that reads intentional at 16px.</p>
+      <p>Production logo currently in use site-wide.</p>
     </header>
 
     <div class="logo-lab-grid">

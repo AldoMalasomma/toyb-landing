@@ -6,11 +6,10 @@ const links = [
   { href: "/#creators", label: "Built for creators" },
   { href: "/#preview", label: "Preview" },
 ];
-const isHome = Astro.url.pathname === "/";
 ---
 
 <div class="navbar layout-shell" data-reveal>
-  <Logo variant="slice" size="md" asLink={!isHome} experimentalCursor />
+  <Logo size="sm" asLink={false} />
 
   <nav aria-label="Primary">
     <ul class="nav-links">
@@ -28,7 +27,7 @@ const isHome = Astro.url.pathname === "/";
 
   <a
     class="button button-primary"
-    href="/#preview"
+    href="/#waitlist-title"
     data-track="cta_nav_early_access"
   >
     Get early access
