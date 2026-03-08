@@ -88,9 +88,9 @@ const getEmailBody = (
     "",
     "Hi,",
     "",
-    "you're now on the Toyb early access list.",
+    "You're now on the Toyb early access list.",
     "",
-    "Toyb is a narrative systems platform designed to help creators manage complex worldbuilding projects as structured systems instead of scattered files.",
+    "Toyb is a narrative systems platform built to help creators manage complex worldbuilding projects as structured systems instead of scattered files.",
     "",
     "The project is currently in its first private release phase while core workflows and UX are being finalized.",
     "",
@@ -101,11 +101,13 @@ const getEmailBody = (
     "- join the founding community",
     "- receive early access to the public launch",
     "",
+    "Visit Toyb: https://toyb.space",
+    "",
     "The public launch is planned on Kickstarter in the coming weeks.",
     "",
-    "You'll receive an update when the private beta opens.",
+    "We'll send another update when the private beta opens.",
     "",
-    "Visit Toyb: https://toyb.space",
+    "We'll only send occasional updates about early access and launch.",
     "",
     "Toyb is built by Aldo G. Malasomma, an independent developer with 15+ years of experience building web systems and creative tools.",
     "",
@@ -142,30 +144,37 @@ const getEmailBody = (
               </td>
             </tr>
             <tr>
-              <td style="background:#ffffff;padding:28px 28px 24px;line-height:1.65;font-size:16px;color:#111827;">
+              <td style="background:#ffffff;padding:30px 30px 12px;line-height:1.65;font-size:16px;color:#111827;">
                 <p style="margin:0 0 14px;">Hi,</p>
-                <p style="margin:0 0 14px;">you're now on the Toyb early access list.</p>
-                <p style="margin:0 0 14px;">Toyb is a narrative systems platform designed to help creators manage complex worldbuilding projects as structured systems instead of scattered files.</p>
-                <p style="margin:0 0 14px;">The project is currently in its first private release phase while core workflows and UX are being finalized.</p>
+                <p style="margin:0 0 16px;font-size:22px;line-height:1.3;font-weight:700;color:#0f172a;">You're now on the Toyb early access list.</p>
+                <p style="margin:0 0 14px;">Toyb is a narrative systems platform built to help creators manage complex worldbuilding projects as structured systems instead of scattered files.</p>
+                <p style="margin:0 0 16px;">The project is currently in its first private release phase while core workflows and UX are being finalized.</p>
                 <p style="margin:0 0 10px;">Early access members will be the first to:</p>
-                <ul style="margin:0 0 16px 20px;padding:0;color:#111827;">
-                  <li style="margin:0 0 6px;">test the private beta</li>
-                  <li style="margin:0 0 6px;">share feedback on workflows and features</li>
-                  <li style="margin:0 0 6px;">join the founding community</li>
-                  <li style="margin:0 0 6px;">receive early access to the public launch</li>
+                <ul style="margin:0 0 18px 20px;padding:0;color:#111827;">
+                  <li style="margin:0 0 7px;">test the private beta</li>
+                  <li style="margin:0 0 7px;">share feedback on workflows and features</li>
+                  <li style="margin:0 0 7px;">join the founding community</li>
+                  <li style="margin:0 0 7px;">receive early access to the public launch</li>
                 </ul>
-                <p style="margin:0 0 14px;">The public launch is planned on Kickstarter in the coming weeks.</p>
-                <p style="margin:0 0 20px;">You'll receive another update when the private beta opens.</p>
-                <p style="margin:0 0 20px;">
+                <p style="margin:0 0 18px;">
                   <a
                     href="${websiteUrl}"
                     style="display:inline-block;background:#07d3f3;color:#0b1020;text-decoration:none;font-weight:600;padding:10px 18px;border-radius:8px;"
                   >Visit toyb.space</a>
                 </p>
-                <p style="margin:0 0 14px;color:#374151;">Toyb is built by Aldo G. Malasomma, an independent developer with 15+ years of experience building web systems and creative tools.</p>
-                <p style="margin:0 0 2px;">Aldo G. Malasomma</p>
-                <p style="margin:0 0 18px;color:#4b5563;">Founder, Toyb</p>
-                <p style="margin:0;font-size:13px;line-height:1.6;color:#6b7280;">
+                <p style="margin:0 0 10px;">The public launch is planned on Kickstarter in the coming weeks.</p>
+                <p style="margin:0 0 16px;">We'll send another update when the private beta opens.</p>
+                <p style="margin:0 0 20px;color:#4b5563;font-size:14px;">We'll only send occasional updates about early access and launch.</p>
+                <div style="margin-top:4px;padding-top:16px;border-top:1px solid #e5e7eb;">
+                  <p style="margin:0 0 10px;color:#374151;">Toyb is built by Aldo G. Malasomma, an independent developer with 15+ years of experience building web systems and creative tools.</p>
+                  <p style="margin:0 0 2px;">Aldo G. Malasomma</p>
+                  <p style="margin:0;color:#4b5563;">Founder, Toyb</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="background:#ffffff;padding:18px 30px 30px;border-top:1px solid #f1f5f9;">
+                <p style="margin:0;font-size:14px;line-height:1.85;color:#6b7280;">
                   <a href="${websiteUrl}" style="color:#6b7280;text-decoration:underline;">Website</a>
                   &nbsp;•&nbsp;
                   <a href="${xUrl}" style="color:#6b7280;text-decoration:underline;">X (@Toybspace)</a>
@@ -173,7 +182,8 @@ const getEmailBody = (
                   <a href="${privacyUrl}" style="color:#6b7280;text-decoration:underline;">Privacy</a>
                   &nbsp;•&nbsp;
                   <a href="${termsUrl}" style="color:#6b7280;text-decoration:underline;">Terms</a>
-                  &nbsp;•&nbsp;
+                </p>
+                <p style="margin:8px 0 0;font-size:14px;line-height:1.75;color:#6b7280;">
                   <a href="${unsubscribeUrl}" style="color:#6b7280;text-decoration:underline;">Unsubscribe from marketing updates</a>
                 </p>
               </td>

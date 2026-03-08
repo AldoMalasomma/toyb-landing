@@ -99,11 +99,11 @@ const uiCopy = {
   waitlist: {
     title: "Request early access.",
     subtitle:
-      "Join the private pre-launch cohort and help validate product priorities before public release.",
-    note: "Early feature access. Founding community. Direct founder feedback channel.",
+      "Join the private pre-launch cohort to access the beta and help validate core workflows before public release.",
+    note: "Early beta access. Founding community. Direct feedback channel with the founder.",
     reassurance:
-      "Early access users receive the private beta invite and early Kickstarter launch notification.",
-    cta: "Request access",
+      "No spam. Just occasional updates about early access and launch.",
+    cta: "Get early access",
   },
   why: {
     subtitle:
@@ -259,6 +259,7 @@ const workspaceOverview = {
     <h2 id="waitlist-title">{copy.waitlist.title}</h2>
     <p class="waitlist__sub">{copy.waitlist.subtitle}</p>
     <p class="waitlist__note">{copy.waitlist.note}</p>
+    <p class="waitlist__reassurance">{copy.waitlist.reassurance}</p>
     <form
       class="waitlist__form"
       data-waitlist-form
@@ -662,13 +663,13 @@ const workspaceOverview = {
 
   <style>
     .founder-origin {
-      margin-top: calc(var(--space-8) + var(--space-2));
-      margin-bottom: var(--space-4);
+      margin-top: calc(var(--space-8) + var(--space-3));
+      margin-bottom: var(--space-6);
     }
 
     .founder-origin__head {
       text-align: center;
-      margin-bottom: var(--space-5);
+      margin-bottom: var(--space-6);
     }
 
     .founder-origin__head h2 {
@@ -678,7 +679,7 @@ const workspaceOverview = {
     .founder-origin__row {
       display: grid;
       grid-template-columns: minmax(6rem, 6.5rem) minmax(0, 1fr);
-      gap: var(--space-5);
+      gap: var(--space-6);
       align-items: start;
       max-width: 56rem;
       margin-inline: auto;
@@ -694,20 +695,23 @@ const workspaceOverview = {
     }
 
     .founder-origin__content {
-      max-width: 44rem;
+      max-width: 46rem;
       display: grid;
-      gap: var(--space-3);
+      gap: var(--space-4);
       text-align: left;
     }
 
     .founder-origin__content p {
       margin: 0;
       color: var(--muted);
+      font-size: 1.01rem;
+      line-height: 1.72;
     }
 
     .founder-origin__link a {
-      color: var(--muted);
-      font-size: var(--text-sm);
+      color: color-mix(in srgb, var(--accent) 55%, var(--text));
+      font-size: 0.98rem;
+      text-underline-offset: 0.2em;
     }
 
     .founder-origin__link a:hover {
