@@ -71,36 +71,132 @@ const getEmailBody = (
   marketingConsent: boolean,
   unsubscribeUrl: string,
 ): { subject: string; text: string; html: string } => {
+  // Legacy copy (rollback):
+  // - Subject: "Toyb — early access confirmed"
+  // - Plain body with short confirmation + Kickstarter context + unsubscribe line
+  const websiteUrl = "https://toyb.space";
+  const termsUrl = "https://toyb.space/terms/";
+  const privacyUrl = "https://toyb.space/privacy/";
+  const xUrl = "https://x.com/Toybspace";
+  const headerImageUrl = `${websiteUrl}/images/assets/toyb-social-cover.png`;
+  const preheader =
+    "You're in. Early access updates and private beta news will land here first.";
+  const subject = "You're on the Toyb early access list";
+
+  const textLines = [
+    preheader,
+    "",
+    "Hi,",
+    "",
+    "you're now on the Toyb early access list.",
+    "",
+    "Toyb is a narrative systems platform designed to help creators manage complex worldbuilding projects as structured systems instead of scattered files.",
+    "",
+    "The project is currently in its first private release phase while core workflows and UX are being finalized.",
+    "",
+    "Early access members will be the first to:",
+    "",
+    "- test the private beta",
+    "- share feedback on workflows and features",
+    "- join the founding community",
+    "- receive early access to the public launch",
+    "",
+    "The public launch is planned on Kickstarter in the coming weeks.",
+    "",
+    "You'll receive an update when the private beta opens.",
+    "",
+    "Visit Toyb: https://toyb.space",
+    "",
+    "Toyb is built by Aldo G. Malasomma, an independent developer with 15+ years of experience building web systems and creative tools.",
+    "",
+    "Thanks for joining early.",
+    "",
+    "Aldo G. Malasomma",
+    "Founder, Toyb",
+    "",
+    "Website: https://toyb.space",
+    "X (@Toybspace): https://x.com/Toybspace",
+    "Privacy: https://toyb.space/privacy/",
+    "Terms: https://toyb.space/terms/",
+    "",
+    `Unsubscribe from marketing updates: ${unsubscribeUrl}`,
+  ];
+  const htmlBody = `<!doctype html>
+<html lang="en">
+  <body style="margin:0;padding:0;background:#f4f7fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#111827;">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;visibility:hidden;">
+      ${preheader}
+    </div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#f4f7fb;padding:24px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;border-collapse:collapse;">
+            <tr>
+              <td style="padding:0;">
+                <img
+                  src="${headerImageUrl}"
+                  alt="Toyb early access header"
+                  width="640"
+                  style="display:block;width:100%;height:auto;border:0;outline:none;text-decoration:none;"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td style="background:#ffffff;padding:28px 28px 24px;line-height:1.65;font-size:16px;color:#111827;">
+                <p style="margin:0 0 14px;">Hi,</p>
+                <p style="margin:0 0 14px;">you're now on the Toyb early access list.</p>
+                <p style="margin:0 0 14px;">Toyb is a narrative systems platform designed to help creators manage complex worldbuilding projects as structured systems instead of scattered files.</p>
+                <p style="margin:0 0 14px;">The project is currently in its first private release phase while core workflows and UX are being finalized.</p>
+                <p style="margin:0 0 10px;">Early access members will be the first to:</p>
+                <ul style="margin:0 0 16px 20px;padding:0;color:#111827;">
+                  <li style="margin:0 0 6px;">test the private beta</li>
+                  <li style="margin:0 0 6px;">share feedback on workflows and features</li>
+                  <li style="margin:0 0 6px;">join the founding community</li>
+                  <li style="margin:0 0 6px;">receive early access to the public launch</li>
+                </ul>
+                <p style="margin:0 0 14px;">The public launch is planned on Kickstarter in the coming weeks.</p>
+                <p style="margin:0 0 20px;">You'll receive another update when the private beta opens.</p>
+                <p style="margin:0 0 20px;">
+                  <a
+                    href="${websiteUrl}"
+                    style="display:inline-block;background:#07d3f3;color:#0b1020;text-decoration:none;font-weight:600;padding:10px 18px;border-radius:8px;"
+                  >Visit toyb.space</a>
+                </p>
+                <p style="margin:0 0 14px;color:#374151;">Toyb is built by Aldo G. Malasomma, an independent developer with 15+ years of experience building web systems and creative tools.</p>
+                <p style="margin:0 0 2px;">Aldo G. Malasomma</p>
+                <p style="margin:0 0 18px;color:#4b5563;">Founder, Toyb</p>
+                <p style="margin:0;font-size:13px;line-height:1.6;color:#6b7280;">
+                  <a href="${websiteUrl}" style="color:#6b7280;text-decoration:underline;">Website</a>
+                  &nbsp;•&nbsp;
+                  <a href="${xUrl}" style="color:#6b7280;text-decoration:underline;">X (@Toybspace)</a>
+                  &nbsp;•&nbsp;
+                  <a href="${privacyUrl}" style="color:#6b7280;text-decoration:underline;">Privacy</a>
+                  &nbsp;•&nbsp;
+                  <a href="${termsUrl}" style="color:#6b7280;text-decoration:underline;">Terms</a>
+                  &nbsp;•&nbsp;
+                  <a href="${unsubscribeUrl}" style="color:#6b7280;text-decoration:underline;">Unsubscribe from marketing updates</a>
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+
   if (marketingConsent) {
     return {
-      subject: "Welcome to Toyb (marketing enabled)",
-      text: [
-        "You're on the waitlist.",
-        "You also opted in for marketing updates.",
-        "",
-        `Unsubscribe from marketing: ${unsubscribeUrl}`,
-      ].join("\n"),
-      html: [
-        "<p>You're on the waitlist.</p>",
-        "<p>You also opted in for marketing updates.</p>",
-        `<p><a href="${unsubscribeUrl}">Unsubscribe from marketing</a></p>`,
-      ].join(""),
+      subject,
+      text: textLines.join("\n"),
+      html: htmlBody,
     };
   }
 
   return {
-    subject: "Welcome to Toyb",
-    text: [
-      "You're on the waitlist.",
-      "You did not opt in for marketing updates.",
-      "",
-      `Manage marketing preference: ${unsubscribeUrl}`,
-    ].join("\n"),
-    html: [
-      "<p>You're on the waitlist.</p>",
-      "<p>You did not opt in for marketing updates.</p>",
-      `<p><a href="${unsubscribeUrl}">Manage marketing preference</a></p>`,
-    ].join(""),
+    subject,
+    text: textLines.join("\n"),
+    html: htmlBody,
   };
 };
 

@@ -421,6 +421,32 @@ a:not(.button):not(.wordmark):not(.logo):not(.nav-link):hover {
   flex-wrap: wrap;
 }
 
+.hero-early-access-benefits {
+  margin-top: var(--space-5);
+  max-width: 38rem;
+}
+
+.hero-early-access-benefits__title {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--accent) 76%, var(--text));
+}
+
+.hero-early-access-benefits__list {
+  margin: 0.45rem 0 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.24rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--text) 82%, transparent);
+}
+
+.hero-early-access-benefits__list li::marker {
+  color: color-mix(in srgb, var(--accent) 72%, var(--text));
+}
+
 .hero-accent {
   position: relative;
   display: inline-block;
@@ -459,6 +485,27 @@ a:not(.button):not(.wordmark):not(.logo):not(.nav-link):hover {
 .section {
   margin-top: var(--space-8);
   border-radius: var(--radius-md);
+}
+
+.prelaunch-context {
+  width: min(42rem, 100%);
+  margin-inline: auto;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-3);
+  text-align: center;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.prelaunch-context p {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--text) 82%, transparent);
+}
+
+.prelaunch-context p:last-child {
+  color: color-mix(in srgb, var(--accent) 76%, var(--text));
 }
 
 .founder-note {

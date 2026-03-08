@@ -8,6 +8,27 @@ const legalLinks = [
   { href: "/terms", label: "Terms" },
   { href: "/imprint", label: "Imprint" },
 ];
+
+const followLinks = [
+  {
+    href: "https://x.com/Toybspace",
+    label: "X",
+    icon: "/images/social-icons/x.svg",
+    external: true,
+  },
+  {
+    href: "https://github.com/toyb-space/toyb",
+    label: "GitHub",
+    icon: "/images/social-icons/github.svg",
+    external: true,
+  },
+  {
+    href: "mailto:hello@toyb.space",
+    label: "Email",
+    icon: "/images/social-icons/maildotru.svg",
+    external: false,
+  },
+];
 ---
 
 <footer class="site-footer" data-reveal>
@@ -29,5 +50,62 @@ const legalLinks = [
         }
       </ul>
     </nav>
+
+    <!-- Follow Toyb start -->
+    <nav aria-label="Follow Toyb">
+      <p class="footer-line">Follow Toyb</p>
+      <ul class="footer-links footer-links--icons">
+        {
+          followLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-label={link.label}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
+              >
+                <img
+                  class="footer-social-icon"
+                  src={link.icon}
+                  alt=""
+                  width="16"
+                  height="16"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="sr-only">{link.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <!-- Follow Toyb end -->
   </div>
 </footer>
+
+<style>
+  .footer-links--icons {
+    gap: var(--space-3);
+  }
+
+  .footer-links--icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .footer-social-icon {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.78;
+    filter: invert(78%);
+  }
+
+  .footer-links--icons a:hover .footer-social-icon {
+    opacity: 1;
+    filter: invert(92%);
+  }
+</style>

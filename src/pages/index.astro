@@ -11,26 +11,156 @@ const waitlistTurnstileEnabled =
 const turnstileSiteKey = import.meta.env.TURNSTILE_SITE_KEY ?? "";
 const privacyHref = getPrivacyHref();
 
-const whyItems = [
-  {
-    title: "Projects as universes",
-    text: "Model creative work as interconnected systems instead of isolated files and folders.",
+// Keep legacy copy available for quick rollback.
+const legacyCopy = {
+  prelaunchContext: [
+    "Toyb has been in development for six months and is now nearing its first public release.",
+    "Built by a solo founder focused on narrative systems.",
+    "Kickstarter campaign launching soon.",
+  ],
+  founderNote:
+    "Toyb was built out of frustration with tools that treat worlds like folders. I wanted something that thinks in systems. If you build in systems too, you'll feel at home here.",
+  whatIs: [
+    "Toyb is a narrative systems engine that helps creators build, connect, and explore fictional universes as structured ecosystems — not scattered files.",
+    "Instead of storing lore in folders or isolated documents, Toyb visualizes and maps relationships between characters, events, factions, plots, and locations. It reveals hidden dependencies, clarifies timeline logic, and helps detect contradictions early.",
+    "Whether you’re crafting a novel, a game world, or a complex mythos, Toyb gives you the tools to manage and grow your narrative without losing coherence.",
+  ],
+  waitlist: {
+    title: "Become a founding system builder.",
+    subtitle:
+      "The first cohort will shape Toyb’s architecture and evolution before public release.",
+    note: "Direct access. Private channel. Lifetime founding status.",
+    reassurance:
+      "Early access users receive the private beta invite and early Kickstarter launch notification.",
+    cta: "Join the founding cohort",
   },
-  {
-    title: "Narrative graph & timeline",
-    text: "Track relationships, chronology, and dependencies without losing clarity.",
+  why: {
+    subtitle:
+      "A calm interface for complex creative systems. Minimal surface, maximum control.",
+    items: [
+      {
+        title: "Projects as universes",
+        text: "Model creative work as interconnected systems instead of isolated files and folders.",
+      },
+      {
+        title: "Narrative graph & timeline",
+        text: "Track relationships, chronology, and dependencies without losing clarity.",
+      },
+      {
+        title: "AI-assisted coherence checks",
+        text: "Surface contradictions early while preserving author intent and stylistic control.",
+      },
+    ],
   },
-  {
-    title: "AI-assisted coherence checks",
-    text: "Surface contradictions early while preserving author intent and stylistic control.",
+  creators: {
+    subtitle:
+      "For writers and worldbuilders who design universes as interconnected structures — not loose documents.",
+    bullets: [
+      "Model characters, plots, factions, and locations as relational components.",
+      "Build modular worlds that evolve without collapsing under their own complexity.",
+      "Make constraints visible so coherence scales with ambition.",
+    ],
+    visualAlt: "Toyb narrative graph preview",
   },
-];
+  preview: {
+    subtitle:
+      "Toyb turns characters, plots, factions, timelines, and worlds into a living relational system — not a folder tree.",
+    summaryLead: "See your universe as a structured network — not scattered notes.",
+    summaryLine1: "Characters link to plots.",
+    summaryLine2: "Events sit on timelines.",
+    summaryLine3: "Factions shape arcs.",
+    summaryLine4: "Track dependencies. Surface contradictions.",
+    summaryLine5: "Strengthen coherence before complexity turns into chaos.",
+    statementLine1: "This isn’t a writing tool.",
+    statementLine2: "It’s infrastructure for narrative systems.",
+    note: "Early members help shape the system before public launch.",
+    ctaPrimary: "Get early access",
+    ctaSecondary: "See how it works",
+  },
+  workspace: {
+    subtitle: "See your universe at a glance.",
+    copy: "Track entities, timelines, narrative signals, and project health from one unified workspace.",
+  },
+} as const;
 
-const creatorBullets = [
-  "Model characters, plots, factions, and locations as relational components.",
-  "Build modular worlds that evolve without collapsing under their own complexity.",
-  "Make constraints visible so coherence scales with ambition.",
-];
+const uiCopy = {
+  prelaunchContext: [
+    "Toyb is now entering its first private release phase.",
+    "Toyb replaces folder-based worldbuilding workflows with a system-oriented workspace.",
+    "Kickstarter launch planned for next month. Early access includes launch notification and early backer rewards.",
+  ],
+  founderNote:
+    "Built by a solo founder focused on narrative systems.",
+  whatIs: [
+    "Toyb is a narrative systems platform for managing projects as connected data, not scattered files.",
+    "Track relationships across characters, events, factions, plots, and locations in one operational model.",
+    "Monitor dependencies, detect contradictions early, and keep narrative state consistent as scope grows.",
+  ],
+  waitlist: {
+    title: "Request early access.",
+    subtitle:
+      "Join the private pre-launch cohort and help validate product priorities before public release.",
+    note: "Early feature access. Founding community. Direct founder feedback channel.",
+    reassurance:
+      "Early access users receive the private beta invite and early Kickstarter launch notification.",
+    cta: "Request access",
+  },
+  why: {
+    subtitle:
+      "Operational controls for complex narrative projects. Minimal surface, maximum clarity.",
+    items: [
+      {
+        title: "Projects as systems",
+        text: "Model creative work as linked entities instead of isolated documents and folders.",
+      },
+      {
+        title: "Graph + timeline control",
+        text: "Review relationships, chronology, and dependencies in one structured interface.",
+      },
+      {
+        title: "Coherence checks",
+        text: "Detect contradictions early and resolve narrative conflicts before they scale.",
+      },
+    ],
+  },
+  creators: {
+    subtitle:
+      "For writers and worldbuilders who need structured control across interconnected narrative components.",
+    bullets: [
+      "Model characters, plots, factions, and locations as linked records.",
+      "Keep timeline and dependency logic explicit as projects scale.",
+      "Reduce rework by surfacing constraints early.",
+    ],
+    visualAlt: "Toyb narrative graph interface",
+  },
+  preview: {
+    subtitle:
+      "Operate graph, timeline, insights, and health views as one coherent narrative workflow.",
+    summaryLead:
+      "Run your project as a connected system instead of disconnected notes.",
+    summaryLine1: "Characters link to plots.",
+    summaryLine2: "Events map to timelines.",
+    summaryLine3: "Factions track influence across arcs.",
+    summaryLine4: "Monitor dependencies. Resolve contradictions early.",
+    summaryLine5: "Maintain consistency as project complexity grows.",
+    statementLine1: "Not a generic writing app.",
+    statementLine2: "A control layer for narrative systems.",
+    note: "Early access users help prioritize workflows before public launch.",
+    ctaPrimary: "Get early access",
+    ctaSecondary: "See how it works",
+  },
+  workspace: {
+    subtitle: "Project workspace overview.",
+    copy: "Track entities, timelines, narrative signals, and project health from one unified workspace.",
+  },
+} as const;
+
+const copyVersion: "ui" | "legacy" =
+  import.meta.env.PUBLIC_COPY_VERSION === "legacy" ? "legacy" : "ui";
+const copy = copyVersion === "legacy" ? legacyCopy : uiCopy;
+
+const whyItems = copy.why.items.map((item) => ({ ...item }));
+const creatorBullets = [...copy.creators.bullets];
 
 const previewSlides = [
   {
@@ -78,42 +208,57 @@ const workspaceOverview = {
 >
   <Hero />
 
+  <!-- Old prelaunch block start -->
+  <!--
+  <section class="prelaunch-context" aria-label="Pre-launch context" data-reveal>
+    <p>{copy.prelaunchContext[0]}</p>
+    <p>{copy.prelaunchContext[1]}</p>
+    <p>{copy.prelaunchContext[2]}</p>
+  </section>
+
   <section class="founder-note" aria-label="Founder note" data-reveal>
-    <p class="founder-note__text">
-      Toyb was built out of frustration with tools that treat worlds like
-      folders. I wanted something that thinks in systems. If you build in
-      systems too, you'll feel at home here.
-    </p>
+    <p class="founder-note__text">{copy.founderNote}</p>
+  </section>
+  -->
+  <!-- Old prelaunch block end -->
+
+  <section class="founder-note" aria-label="Early access briefing" data-reveal>
+    <p class="hero-early-access-benefits__title">Early access includes:</p>
+    <ul class="hero-early-access-benefits__list">
+      <li>invitation to the private beta</li>
+      <li>access to the founding community</li>
+      <li>direct feedback with the creator</li>
+      <li>founding builder status</li>
+      <li>Kickstarter launch notification</li>
+      <li>early backer rewards</li>
+    </ul>
+    <div class="waitlist__consents" style="margin-top: var(--space-3);">
+      <p class="waitlist__note">
+        Toyb replaces folder-based worldbuilding workflows with a
+        system-oriented workspace.
+      </p>
+      <p class="waitlist__note">
+        Toyb is entering its first private release phase with early testers.
+      </p>
+      <p class="waitlist__note">
+        The public launch is planned for Kickstarter next month.
+      </p>
+      <p class="waitlist__note">
+        Built by a solo founder focused on narrative systems.
+      </p>
+    </div>
   </section>
 
   <Section id="what-is-toyb" title="What is Toyb?">
-    <p>
-      Toyb is a narrative systems engine that helps creators build, connect,
-      and explore fictional universes as structured ecosystems — not scattered
-      files.
-    </p>
-    <p>
-      Instead of storing lore in folders or isolated documents, Toyb visualizes
-      and maps relationships between characters, events, factions, plots, and
-      locations. It reveals hidden dependencies, clarifies timeline logic, and
-      helps detect contradictions early.
-    </p>
-    <p>
-      Whether you’re crafting a novel, a game world, or a complex mythos, Toyb
-      gives you the tools to manage and grow your narrative without losing
-      coherence.
-    </p>
+    <p>{copy.whatIs[0]}</p>
+    <p>{copy.whatIs[1]}</p>
+    <p>{copy.whatIs[2]}</p>
   </Section>
 
   <section class="waitlist" aria-labelledby="waitlist-title" data-reveal>
-    <h2 id="waitlist-title">Become a founding system builder.</h2>
-    <p class="waitlist__sub">
-      The first cohort will shape Toyb’s architecture and evolution before
-      public release.
-    </p>
-    <p class="waitlist__note">
-      Direct access. Private channel. Lifetime founding status.
-    </p>
+    <h2 id="waitlist-title">{copy.waitlist.title}</h2>
+    <p class="waitlist__sub">{copy.waitlist.subtitle}</p>
+    <p class="waitlist__note">{copy.waitlist.note}</p>
     <form
       class="waitlist__form"
       data-waitlist-form
@@ -131,7 +276,7 @@ const workspaceOverview = {
           required
         />
         <button class="button button-primary waitlist__button" type="submit">
-          Join the founding cohort
+          {copy.waitlist.cta}
         </button>
       </div>
       <div class="waitlist__honeypot" aria-hidden="true">
@@ -185,7 +330,7 @@ const workspaceOverview = {
   <Section
     id="why-toyb"
     title="Why Toyb"
-    subtitle="A calm interface for complex creative systems. Minimal surface, maximum control."
+    subtitle={copy.why.subtitle}
   >
     <FeatureGrid items={whyItems} />
   </Section>
@@ -193,7 +338,7 @@ const workspaceOverview = {
   <Section
     id="creators"
     title="Built for system thinkers."
-    subtitle="For writers and worldbuilders who design universes as interconnected structures — not loose documents."
+    subtitle={copy.creators.subtitle}
   >
     <div class="creators-grid">
       <ul class="bullets">
@@ -208,7 +353,7 @@ const workspaceOverview = {
           <img
             class="micro-visual__image"
             src="/images/landing/toyb-narrative-graph.png"
-            alt="Toyb narrative graph preview"
+            alt={copy.creators.visualAlt}
             loading="lazy"
             decoding="async"
           />
@@ -220,7 +365,7 @@ const workspaceOverview = {
   <Section
     id="preview"
     title="Inside the engine."
-    subtitle="Toyb turns characters, plots, factions, timelines, and worlds into a living relational system — not a folder tree."
+    subtitle={copy.preview.subtitle}
   >
     <article class="preview-card">
       <div class="preview-frame">
@@ -300,30 +445,28 @@ const workspaceOverview = {
         </div>
       </div>
       <p>
-        See your universe as a structured network — not scattered notes.<br />
+        {copy.preview.summaryLead}<br />
         <br />
-        Characters link to plots.<br />
-        Events sit on timelines.<br />
-        Factions shape arcs.<br />
+        {copy.preview.summaryLine1}<br />
+        {copy.preview.summaryLine2}<br />
+        {copy.preview.summaryLine3}<br />
         <br />
-        Track dependencies. Surface contradictions.<br />
-        Strengthen coherence before complexity turns into chaos.
+        {copy.preview.summaryLine4}<br />
+        {copy.preview.summaryLine5}
       </p>
       <p>
-        This isn’t a writing tool.<br />
-        It’s infrastructure for narrative systems.
+        {copy.preview.statementLine1}<br />
+        {copy.preview.statementLine2}
       </p>
-      <p class="preview-note">
-        Early members help shape the system before public launch.
-      </p>
+      <p class="preview-note">{copy.preview.note}</p>
       <div class="hero-actions" aria-label="Preview actions">
         <a
           class="button button-primary"
           href="/#waitlist-title"
-          data-track="cta_preview_access">Get early access</a
+          data-track="cta_preview_access">{copy.preview.ctaPrimary}</a
         >
         <a class="button" href="/#why-toyb" data-track="cta_preview_learn"
-          >See how it works</a
+          >{copy.preview.ctaSecondary}</a
         >
       </div>
     </article>
@@ -393,13 +536,10 @@ const workspaceOverview = {
   <Section
     id="workspace-overview"
     title="The Toyb workspace"
-    subtitle="See your universe at a glance."
+    subtitle={copy.workspace.subtitle}
   >
     <article class="workspace-panel">
-      <p class="workspace-panel__copy">
-        Track entities, timelines, narrative signals, and project health from
-        one unified workspace.
-      </p>
+      <p class="workspace-panel__copy">{copy.workspace.copy}</p>
 
       <button
         type="button"
@@ -423,6 +563,173 @@ const workspaceOverview = {
       </button>
     </article>
   </Section>
+
+  <!-- Founder section previous layout start -->
+  <!--
+  <section id="founder" class="section founder-origin" aria-labelledby="founder-title" data-reveal>
+    <div class="founder-origin__inner">
+      <img
+        class="founder-origin__portrait"
+        src="/images/assets/founder-aldo-malasomma.webp"
+        alt="Portrait of Aldo G. Malasomma"
+        width="112"
+        height="112"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="founder-origin__content">
+        <h2 id="founder-title">Built by a solo founder</h2>
+        <p>
+          Toyb is developed by Aldo G. Malasomma, an independent developer with
+          15+ years of experience building web systems and creative tools.
+        </p>
+        <p>
+          The idea came while working on a large science-fiction worldbuilding
+          project. Hundreds of notes, character ideas, technologies, and plot
+          fragments had grown across files, notebooks, and devices.
+        </p>
+        <p>
+          Managing that complexity became harder than writing the story itself.
+        </p>
+        <p>
+          Toyb was created to solve that problem: treating narrative worlds as
+          structured systems instead of scattered files.
+        </p>
+        <p>
+          Aldo relocated to Estonia to build the project inside one of Europe’s
+          most active digital startup ecosystems.
+        </p>
+        <p class="founder-origin__link">
+          <a
+            href="https://www.linkedin.com/in/aldo-g-malasomma/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+        </p>
+      </div>
+    </div>
+  </section>
+  -->
+  <!-- Founder section previous layout end -->
+
+  <section id="founder" class="section founder-origin" aria-labelledby="founder-title" data-reveal>
+    <header class="founder-origin__head">
+      <h2 id="founder-title">Built by a solo founder</h2>
+    </header>
+    <div class="founder-origin__row">
+      <img
+        class="founder-origin__portrait"
+        src="/images/assets/founder-aldo-malasomma.webp"
+        alt="Portrait of Aldo G. Malasomma"
+        width="104"
+        height="104"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="founder-origin__content">
+        <p>
+          Toyb is developed by Aldo G. Malasomma, an independent developer with
+          15+ years of experience building web systems and creative tools.
+        </p>
+        <p>
+          The idea came while working on a large science-fiction worldbuilding
+          project. Hundreds of notes, character ideas, technologies, and plot
+          fragments had grown across files, notebooks, and devices.
+        </p>
+        <p>
+          Managing that complexity became harder than writing the story itself.
+        </p>
+        <p>
+          Toyb was created to solve that problem: treating narrative worlds as
+          structured systems instead of scattered files.
+        </p>
+        <p>
+          Aldo relocated to Estonia to build the project inside one of Europe’s
+          most active digital startup ecosystems.
+        </p>
+        <p class="founder-origin__link">
+          <a
+            href="https://www.linkedin.com/in/aldo-g-malasomma/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .founder-origin {
+      margin-top: calc(var(--space-8) + var(--space-2));
+      margin-bottom: var(--space-4);
+    }
+
+    .founder-origin__head {
+      text-align: center;
+      margin-bottom: var(--space-5);
+    }
+
+    .founder-origin__head h2 {
+      margin: 0;
+    }
+
+    .founder-origin__row {
+      display: grid;
+      grid-template-columns: minmax(6rem, 6.5rem) minmax(0, 1fr);
+      gap: var(--space-5);
+      align-items: start;
+      max-width: 56rem;
+      margin-inline: auto;
+    }
+
+    .founder-origin__portrait {
+      width: clamp(6rem, 9vw, 6.5rem);
+      height: clamp(6rem, 9vw, 6.5rem);
+      border-radius: 999px;
+      object-fit: cover;
+      object-position: center;
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--border) 78%, transparent);
+    }
+
+    .founder-origin__content {
+      max-width: 44rem;
+      display: grid;
+      gap: var(--space-3);
+      text-align: left;
+    }
+
+    .founder-origin__content p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .founder-origin__link a {
+      color: var(--muted);
+      font-size: var(--text-sm);
+    }
+
+    .founder-origin__link a:hover {
+      color: var(--text);
+    }
+
+    @media (max-width: 47.99rem) {
+      .founder-origin__head {
+        margin-bottom: var(--space-4);
+      }
+
+      .founder-origin__row {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+      }
+
+      .founder-origin__portrait {
+        width: clamp(5.8rem, 24vw, 6.5rem);
+        height: clamp(5.8rem, 24vw, 6.5rem);
+      }
+    }
+  </style>
 
   <script>
     import { track } from "../lib/analytics";
