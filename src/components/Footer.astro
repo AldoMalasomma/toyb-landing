@@ -9,6 +9,16 @@ const legalLinks = [
   { href: "/imprint", label: "Imprint" },
 ];
 
+const siteLinks = [
+  { href: "/origin", label: "Origin", track: "footer_origin" },
+  { href: "/#preview", label: "Preview", track: "footer_preview" },
+  {
+    href: "/#waitlist-title",
+    label: "Get early access",
+    track: "footer_early_access",
+  },
+];
+
 const followLinks = [
   {
     href: "https://x.com/Toybspace",
@@ -45,6 +55,20 @@ const followLinks = [
           legalLinks.map((link) => (
             <li>
               <a href={link.href}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav aria-label="Site">
+      <ul class="footer-links">
+        {
+          siteLinks.map((link) => (
+            <li>
+              <a href={link.href} data-track={link.track}>
+                {link.label}
+              </a>
             </li>
           ))
         }

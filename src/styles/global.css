@@ -269,6 +269,11 @@ a:not(.button):not(.wordmark):not(.logo):not(.nav-link):hover {
   color: var(--text);
 }
 
+.nav-link[aria-current="page"] {
+  color: var(--text);
+  font-weight: 600;
+}
+
 .nav-toggle {
   display: none;
 }

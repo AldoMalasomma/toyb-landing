@@ -1,10 +1,17 @@
 ---
 import Logo from "./Logo.astro";
 
+const currentPath = Astro.url.pathname;
+
 const links = [
   { href: "/#why-toyb", label: "Why Toyb" },
   { href: "/#creators", label: "Built for creators" },
   { href: "/#preview", label: "Preview" },
+  {
+    href: "/origin",
+    label: "Origin",
+    track: "nav_origin",
+  },
   {
     href: "/#waitlist-title",
     label: "Get early access",
@@ -41,6 +48,7 @@ const links = [
               class:list={["nav-link", link.emphasis && "nav-link--highlight"]}
               href={link.href}
               data-track={link.track}
+              aria-current={link.href === currentPath ? "page" : undefined}
             >
               {link.label}
             </a>
