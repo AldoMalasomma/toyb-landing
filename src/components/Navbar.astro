@@ -21,7 +21,12 @@ const links = [
 ];
 ---
 
-<div class="navbar layout-shell" data-reveal data-nav-root>
+<div
+  class="navbar layout-shell"
+  data-reveal
+  data-nav-root
+  data-nav-open="false"
+>
   <Logo size="sm" asLink={false} />
 
   <button
@@ -59,6 +64,20 @@ const links = [
   </nav>
 </div>
 
+<noscript>
+  <style>
+    @media (max-width: 47.99rem) {
+      .navbar[data-nav-root] .nav-toggle {
+        display: none !important;
+      }
+
+      .navbar[data-nav-root] .navbar-menu {
+        display: block !important;
+      }
+    }
+  </style>
+</noscript>
+
 <script>
   const navRoot = document.querySelector("[data-nav-root]");
   if (navRoot instanceof HTMLElement) {
@@ -73,7 +92,6 @@ const links = [
       };
 
       const syncForViewport = () => {
-        navRoot.setAttribute("data-nav-enhanced", "true");
         if (mobileMq.matches) {
           const isOpen = navRoot.getAttribute("data-nav-open") === "true";
           applyState(isOpen);

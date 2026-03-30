@@ -1305,6 +1305,7 @@ a:not(.button):not(.wordmark):not(.logo):not(.nav-link):hover {
 
   .navbar .navbar-menu {
     grid-column: 1 / -1;
+    display: none;
   }
 
   .nav-toggle {
@@ -1345,11 +1346,7 @@ a:not(.button):not(.wordmark):not(.logo):not(.nav-link):hover {
     transform: translateY(-0.355rem) rotate(-45deg);
   }
 
-  .navbar[data-nav-enhanced="true"] .navbar-menu {
-    display: none;
-  }
-
-  .navbar[data-nav-enhanced="true"][data-nav-open="true"] .navbar-menu {
+  .navbar[data-nav-open="true"] .navbar-menu {
     display: block;
   }
 
