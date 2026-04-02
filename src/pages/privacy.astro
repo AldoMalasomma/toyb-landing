@@ -1,4 +1,5 @@
 ---
+import EmailLink from "../components/EmailLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 export const prerender = true;
@@ -20,7 +21,10 @@ export const prerender = true;
       Aldo Gustavo Malasomma<br />
       Kreutzwaldi 22-2<br />
       10147 Tallinn, Estonia<br />
-      Email: <a href="mailto:support@toyb.space">support@toyb.space</a>
+      Email:
+      <EmailLink address="support@toyb.space">
+        support@toyb.space
+      </EmailLink>
     </p>
     <p>
       The startup is not yet formally incorporated. Therefore, personal data
@@ -82,8 +86,10 @@ export const prerender = true;
     </p>
     <p>
       Consent may be withdrawn at any time by contacting{" "}
-      <a href="mailto:support@toyb.space">support@toyb.space</a> or by using
-      the unsubscribe mechanism included in communications.
+      <EmailLink address="support@toyb.space">
+        support@toyb.space
+      </EmailLink>{" "}
+      or by using the unsubscribe mechanism included in communications.
     </p>
     <p>
       Withdrawal of consent does not affect the lawfulness of processing

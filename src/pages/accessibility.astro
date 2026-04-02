@@ -1,4 +1,5 @@
 ---
+import EmailLink from "../components/EmailLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 export const prerender = true;
@@ -45,7 +46,9 @@ export const prerender = true;
     <h2>Feedback Contact</h2>
     <p>
       If you encounter barriers, report them to
-      <a href="mailto:support@toyb.space">support@toyb.space</a> with
+      <EmailLink address="support@toyb.space">
+        support@toyb.space
+      </EmailLink> with
       page URL, device, browser, and a short description of the issue.
     </p>
 

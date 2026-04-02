@@ -1,4 +1,5 @@
 ---
+import EmailLink from "../components/EmailLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 export const prerender = true;
@@ -179,7 +180,9 @@ export const prerender = true;
     <h2>12. Contact</h2>
     <p>
       For any questions regarding these Terms, please contact:
-      <a href="mailto:support@toyb.space">support@toyb.space</a>
+      <EmailLink address="support@toyb.space">
+        support@toyb.space
+      </EmailLink>
     </p>
   </article>
 </BaseLayout>

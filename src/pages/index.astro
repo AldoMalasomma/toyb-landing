@@ -169,9 +169,11 @@ const whyItems = copy.why.items.map((item) => ({ ...item }));
 const creatorBullets = [...copy.creators.bullets];
 
 const previewImageSizes =
-  "(max-width: 47.99rem) calc(100vw - 3.3rem), (max-width: 72rem) calc(100vw - 8rem), 640px";
+  "(max-width: 47.99rem) calc(100vw - 3.3rem), (max-width: 72rem) calc(100vw - 8rem), 532px";
 const workspaceImageSizes =
   "(max-width: 47.99rem) calc(100vw - 3.3rem), (max-width: 72rem) calc(100vw - 5rem), 960px";
+const transparentPixel =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
 const previewSlides = await Promise.all([
   {
@@ -210,7 +212,7 @@ const previewSlides = await Promise.all([
   ...slide,
   previewImage: await getImage({
     src: slide.asset,
-    widths: [480, 640, 960, 1280],
+    widths: [360, 532, 800, 1064],
     sizes: previewImageSizes,
     format: "webp",
     quality: "mid",
@@ -412,6 +414,8 @@ const workspaceOverview = {
                     data-preview-slide
                     data-preview-src={slide.src}
                     data-preview-src-webp={slide.srcWebp}
+                    data-preview-image-src={slide.previewImage.src}
+                    data-preview-image-srcset={slide.previewImage.srcSet.attribute}
                     data-preview-caption={`${slide.label} · ${slide.stage}`}
                     aria-hidden={index === 0 ? "false" : "true"}
                   >
@@ -424,8 +428,14 @@ const workspaceOverview = {
                     >
                       <img
                         class="preview-carousel__image"
-                        src={slide.previewImage.src}
-                        srcset={slide.previewImage.srcSet.attribute}
+                        data-preview-image
+                        data-preview-hydrated={index === 0 ? "true" : undefined}
+                        src={
+                          index === 0
+                            ? slide.previewImage.src
+                            : transparentPixel
+                        }
+                        srcset={index === 0 ? slide.previewImage.srcSet.attribute : undefined}
                         sizes={previewImageSizes}
                         width={slide.previewImage.attributes.width}
                         height={slide.previewImage.attributes.height}
@@ -534,7 +544,7 @@ const workspaceOverview = {
 
         <figure class="preview-lightbox__figure">
           <picture class="preview-lightbox__picture">
-            <source
+              <source
               type="image/webp"
               data-preview-lightbox-source
               srcset=""
@@ -542,7 +552,7 @@ const workspaceOverview = {
             <img
               class="preview-lightbox__image"
               data-preview-lightbox-image
-              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+              src={transparentPixel}
               alt=""
               loading="lazy"
               decoding="async"
@@ -1010,6 +1020,20 @@ const workspaceOverview = {
         };
         let lightboxIndex = 0;
 
+        const hydratePreviewImage = (
+          slide: HTMLElement,
+          slideImage: HTMLImageElement,
+        ) => {
+          if (slideImage.dataset.previewHydrated === "true") return;
+          const src = slide.dataset.previewImageSrc;
+          const srcset = slide.dataset.previewImageSrcset;
+          if (!src || !srcset) return;
+          slideImage.src = src;
+          slideImage.srcset = srcset;
+          slideImage.sizes = previewImageSizes;
+          slideImage.dataset.previewHydrated = "true";
+        };
+
         const syncLightbox = () => {
           if (!lightboxOpen) return;
           if (!(lightboxImage instanceof HTMLImageElement)) return;
@@ -1035,6 +1059,11 @@ const workspaceOverview = {
             const button = slide.querySelector("[data-preview-open]");
             if (button instanceof HTMLButtonElement) {
               button.tabIndex = index === activeIndex ? 0 : -1;
+            }
+            const slideImage = slide.querySelector("[data-preview-image]");
+            if (!(slideImage instanceof HTMLImageElement)) return;
+            if (index === activeIndex) {
+              hydratePreviewImage(slide, slideImage);
             }
           });
           dotButtons.forEach((dot, index) => {

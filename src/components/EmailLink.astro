@@ -1,0 +1,14 @@
+---
+interface Props {
+  address: string;
+  ariaLabel?: string;
+}
+
+const { address, ariaLabel } = Astro.props;
+---
+
+<!--email_off-->
+<a href={`mailto:${address}`} aria-label={ariaLabel}>
+  <slot />
+</a>
+<!--/email_off-->
