@@ -88,7 +88,7 @@ Copy da creare/rifinire:
 
 - nessun buco bloccante; solo eventuale microcopy brand nel footer.
 
-### `src/components/ConsentBanner.astro` (feature flag)
+### `src/components/ConsentBanner.astro`
 
 Copy attuale:
 
@@ -97,11 +97,12 @@ Copy attuale:
 
 Come si raggiunge:
 
-- compare solo con `PUBLIC_ENABLE_CONSENT_BANNER=true`.
+- compare sulle pagine pubbliche, ed è disattivato nelle pagine admin.
 
 Copy da creare/rifinire:
 
-- versione finale legale/cookie se il banner viene attivato in produzione.
+- footer control per riaprire il banner;
+- microcopy finale per analytics consent-aware.
 
 ## 3) Inventario copy per pagina pubblica
 

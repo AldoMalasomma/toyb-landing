@@ -10,6 +10,7 @@ const campaignId = Astro.params.id ?? "";
   description="Internal campaign detail."
   canonical={`https://toyb.space/admin/campaigns/${campaignId}`}
   robots="noindex,nofollow"
+  enableConsentBanner={false}
 >
   <section class="section" data-reveal>
     <div class="section__head">

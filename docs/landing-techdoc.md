@@ -290,9 +290,14 @@ Indicizzazione:
 ### Public/client
 
 - `PUBLIC_SITE_URL`
-- `PUBLIC_ENABLE_CONSENT_BANNER` (opzionale)
 - `WAITLIST_TURNSTILE_ENABLED` (opzionale, UI widget)
 - `TURNSTILE_SITE_KEY` (opzionale, UI widget)
+
+Note:
+
+- The consent banner is enabled by default on public pages through
+  `src/layouts/BaseLayout.astro`.
+- Disable it only on internal/admin pages with `enableConsentBanner={false}`.
 
 ### Server-only
 

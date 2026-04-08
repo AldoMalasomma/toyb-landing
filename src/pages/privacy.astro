@@ -7,11 +7,12 @@ export const prerender = true;
 
 <BaseLayout
   title="Privacy Policy | Toyb"
-  description="Privacy Policy pursuant to Article 13 GDPR for Toyb waitlist and early access processing."
+  description="Privacy Policy pursuant to Article 13 GDPR for Toyb waitlist, early access, and consent-aware analytics processing."
 >
   <article class="legal-page">
     <h1>Privacy Policy</h1>
     <p>(pursuant to Article 13 of Regulation (EU) 2016/679 - GDPR)</p>
+    <p>Last updated: 8 April 2026</p>
 
     <h2>1. Data Controller</h2>
     <p>
@@ -39,6 +40,10 @@ export const prerender = true;
         Consent information (waitlist consent, marketing consent if provided,
         confirmation of age 16+, timestamp of consent)
       </li>
+      <li>
+        Analytics data, only if you accept analytics cookies (for example page
+        views, navigation events, browser and device information)
+      </li>
     </ul>
     <p>
       Pursuant to Article 4 GDPR, personal data means any information relating
@@ -50,7 +55,7 @@ export const prerender = true;
       <li>Data relating specifically to minors</li>
       <li>Profiling data</li>
       <li>Behavioral tracking data</li>
-      <li>Analytics or advertising cookies</li>
+      <li>Analytics or advertising cookies before consent</li>
     </ul>
 
     <h2>3. Purpose of Processing</h2>
@@ -63,6 +68,10 @@ export const prerender = true;
         If explicitly consented to, sending promotional communications and
         newsletters related to the launch of the product, including potential
         crowdfunding campaigns
+      </li>
+      <li>
+        Measuring site traffic and improving the site, only if analytics
+        consent is given
       </li>
     </ol>
     <p>
@@ -131,6 +140,7 @@ export const prerender = true;
     <ul>
       <li>Supabase - Database hosting and storage</li>
       <li>Resend - Transactional and marketing email delivery</li>
+      <li>Google Analytics - Website traffic measurement, only after analytics consent</li>
     </ul>
     <p>
       These providers act as Data Processors pursuant to Article 28 GDPR and
@@ -138,14 +148,20 @@ export const prerender = true;
       contractual agreements compliant with GDPR requirements.
     </p>
     <p>
-      No CRM system, advertising pixel, behavioral tracking tool, or automated
-      profiling system is used.
+      The consent banner stores your choice locally so the site can remember
+      whether you accepted or rejected analytics. Google Analytics is loaded
+      only after acceptance. No advertising pixel or automated profiling
+      system is used.
     </p>
 
     <h2>8. Transfers Outside the European Economic Area</h2>
     <p>
       Some technical providers may process data outside the European Economic
       Area.
+    </p>
+    <p>
+      This may include Google Analytics if analytics consent is given. In that
+      case, appropriate transfer safeguards apply where required.
     </p>
     <p>
       Where applicable, transfers are carried out in compliance with Articles
@@ -166,6 +182,10 @@ export const prerender = true;
       <li>
         Incorporation of the company, at which time an updated privacy policy
         will be provided.
+      </li>
+      <li>
+        Deletion of analytics data according to Google Analytics retention
+        settings and consent status
       </li>
     </ul>
     <p>

@@ -11,6 +11,8 @@ interface Props {
   ogImage?: string;
   lang?: "en" | "it";
   robots?: string;
+  enableConsentBanner?: boolean;
+  analyticsId?: string;
 }
 
 const {
@@ -20,6 +22,8 @@ const {
   ogImage = "/images/assets/toyb-social-cover.png",
   lang = "en",
   robots = "index,follow",
+  enableConsentBanner = true,
+  analyticsId = "G-6ZD3YD2STD",
 } = Astro.props;
 
 const siteOrigin = Astro.site?.toString() ?? "https://toyb.space/";
@@ -41,8 +45,6 @@ const softwareApplicationLd = {
   description,
 };
 
-const enableConsentBanner =
-  import.meta.env.PUBLIC_ENABLE_CONSENT_BANNER === "true";
 ---
 
 <!doctype html>
@@ -119,7 +121,9 @@ const enableConsentBanner =
     </main>
 
     <Footer />
-    {enableConsentBanner && <ConsentBanner />}
+    {enableConsentBanner && (
+      <ConsentBanner analyticsId={analyticsId} policyHref="/privacy" />
+    )}
 
     <script>
       import { track } from "../lib/analytics";

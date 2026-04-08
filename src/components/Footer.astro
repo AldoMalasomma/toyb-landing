@@ -8,6 +8,7 @@ const legalLinks = [
   { href: "/accessibility", label: "Accessibility" },
   { href: "/terms", label: "Terms" },
   { href: "/imprint", label: "Imprint" },
+  { label: "Cookie preferences", action: true },
 ];
 
 const siteLinks = [
@@ -55,7 +56,13 @@ const followLinks = [
         {
           legalLinks.map((link) => (
             <li>
-              <a href={link.href}>{link.label}</a>
+              {"action" in link && link.action ? (
+                <button type="button" class="footer-link-button" data-consent-open>
+                  {link.label}
+                </button>
+              ) : (
+                <a href={link.href}>{link.label}</a>
+              )}
             </li>
           ))
         }
@@ -149,4 +156,33 @@ const followLinks = [
     opacity: 1;
     filter: invert(92%);
   }
+
+  .footer-link-button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    color: var(--muted);
+    font: inherit;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  .footer-link-button:hover {
+    color: var(--text);
+  }
 </style>
+
+<script is:inline>
+  (() => {
+    const buttons = document.querySelectorAll("[data-consent-open]");
+    if (!buttons.length) return;
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        window.dispatchEvent(new CustomEvent("toyb:open-consent-banner"));
+      });
+    });
+  })();
+</script>

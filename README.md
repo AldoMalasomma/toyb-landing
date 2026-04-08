@@ -265,22 +265,19 @@ npx playwright install chromium
 npm run test:a11y
 ```
 
-## Consent banner (feature-flagged)
+## Consent banner
 
-`src/components/ConsentBanner.astro` is included but **disabled by default**.
-
-Enable it only when you add non-essential scripts/cookies:
-
-```bash
-PUBLIC_ENABLE_CONSENT_BANNER=true npm run dev
-```
+`src/components/ConsentBanner.astro` is included on public pages and stays off
+for internal/admin pages.
 
 Behavior:
 
 - Does not set optional cookies by default.
 - Stores user consent choice (`accepted` / `rejected`) in local storage.
+- Loads Google Analytics only after consent.
 - Shows equal-weight **Reject** and **Accept** actions.
 - Links to `/privacy` policy page.
+- Exposes a footer control to reopen the banner later.
 
 ## SEO and metadata
 

@@ -1,9 +1,10 @@
 ---
 interface Props {
   policyHref?: string;
+  analyticsId?: string;
 }
 
-const { policyHref = "/privacy" } = Astro.props;
+const { policyHref = "/privacy", analyticsId = "G-6ZD3YD2STD" } = Astro.props;
 ---
 
 <aside
@@ -13,8 +14,9 @@ const { policyHref = "/privacy" } = Astro.props;
   aria-label="Cookie consent settings"
 >
   <p>
-    We use only essential storage by default. Optional cookies and scripts
-    remain disabled until you provide consent.
+    We use only essential storage by default. If you accept analytics, Google
+    Analytics 4 may set cookies to help us understand traffic and improve the
+    site.
   </p>
   <div class="consent-actions" aria-label="Consent actions">
     <a href={policyHref}>Privacy policy</a>
@@ -31,19 +33,51 @@ const { policyHref = "/privacy" } = Astro.props;
   </div>
 </aside>
 
-<script is:inline>
+<script is:inline define:vars={{ analyticsId }}>
   (() => {
     const STORAGE_KEY = "toyb-consent";
+    const ANALYTICS_ID = analyticsId;
     const banner = document.querySelector("[data-consent-banner]");
     if (!banner) return;
 
-    const savedChoice = localStorage.getItem(STORAGE_KEY);
-    if (savedChoice === "accepted" || savedChoice === "rejected") {
+    const loadAnalytics = () => {
+      if (window.__toybAnalyticsLoaded) return;
+
+      window.dataLayer = window.dataLayer || [];
+      window.gtag =
+        window.gtag ||
+        function gtag() {
+          window.dataLayer.push(arguments);
+        };
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ANALYTICS_ID)}`;
+      document.head.appendChild(script);
+
+      window.gtag("js", new Date());
+      window.gtag("config", ANALYTICS_ID);
+      window.__toybAnalyticsLoaded = true;
+    };
+
+    const hideBanner = () => {
       banner.setAttribute("hidden", "");
-      return;
+    };
+
+    const showBanner = () => {
+      banner.removeAttribute("hidden");
+    };
+
+    const savedChoice = localStorage.getItem(STORAGE_KEY);
+    if (savedChoice === "accepted") {
+      loadAnalytics();
+      hideBanner();
+    } else if (savedChoice === "rejected") {
+      hideBanner();
+    } else {
+      showBanner();
     }
 
-    banner.removeAttribute("hidden");
     const actions = banner.querySelectorAll("[data-consent-action]");
     actions.forEach((action) => {
       action.addEventListener("click", (event) => {
@@ -53,8 +87,13 @@ const { policyHref = "/privacy" } = Astro.props;
         if (choice !== "accepted" && choice !== "rejected") return;
 
         localStorage.setItem(STORAGE_KEY, choice);
-        banner.setAttribute("hidden", "");
+        if (choice === "accepted") {
+          loadAnalytics();
+        }
+        hideBanner();
       });
     });
+
+    window.addEventListener("toyb:open-consent-banner", showBanner);
   })();
 </script>

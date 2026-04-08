@@ -1,11 +1,20 @@
 /**
- * Beta analytics hook.
+ * Analytics hook.
  *
- * Tracking is intentionally disabled for now.
- * To enable in future, wire this function to your analytics provider
- * and call only after explicit consent for non-essential tracking.
+ * This forwards events to Google Analytics only after consent has loaded the
+ * gtag runtime. Before that, it stays a no-op.
  */
 export function track(event: string, payload?: Record<string, unknown>): void {
-  void event;
-  void payload;
+  if (typeof window === "undefined") return;
+  if (typeof window.gtag !== "function") return;
+
+  window.gtag("event", event, payload ?? {});
+}
+
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
+    __toybAnalyticsLoaded?: boolean;
+  }
 }
