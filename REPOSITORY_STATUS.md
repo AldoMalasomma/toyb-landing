@@ -53,4 +53,8 @@ references to production configuration. It may be reconsidered for public
 release only after a deliberate extraction of a public marketing-only surface
 and a separate security review.
 
-Proposed repository: `AldoMalasomma/toyb-landing` (private).
+Repository: `AldoMalasomma/toyb-landing` (private), branch `main`.
+
+The candidate was pushed successfully. The remote's original TOYB landing
+history was integrated with an `ours` merge so the staging tree remains the
+published tree while the historical commits remain reachable.
