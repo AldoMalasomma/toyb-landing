@@ -1,0 +1,49 @@
+---
+interface Props {
+  subtitle?: string;
+  ctaPrimary?: { label: string; href: string };
+  ctaSecondary?: { label: string; href: string };
+}
+
+const {
+  subtitle = "Toyb is a modular worldbuilding engine for creators who think in systems.",
+  ctaPrimary = { label: "Get early access", href: "/#waitlist-title" },
+  ctaSecondary = { label: "See how it works", href: "/#why-toyb" },
+} = Astro.props;
+---
+
+<section class="hero" aria-labelledby="hero-title" data-reveal>
+  <h1 id="hero-title" class="hero-title">
+    Build universes.
+    <span class="hero-nowrap">
+      <span class="hero-accent" data-text="Break">Break</span>
+      complexity.
+    </span>
+  </h1>
+  <p class="hero-subtitle">{subtitle}</p>
+  <div class="hero-actions" aria-label="Hero call to actions">
+    <a
+      class="button button-primary"
+      href={ctaPrimary.href}
+      data-track="cta_hero_primary"
+    >
+      {ctaPrimary.label}
+    </a>
+    <a class="button" href={ctaSecondary.href} data-track="cta_hero_secondary">
+      {ctaSecondary.label}
+    </a>
+  </div>
+  <!-- Old prelaunch block start
+  <div class="hero-early-access-benefits" aria-label="Early access benefits">
+    <p class="hero-early-access-benefits__title">Early access includes:</p>
+    <ul class="hero-early-access-benefits__list">
+      <li>invitation to the private beta</li>
+      <li>access to the founding community</li>
+      <li>direct feedback with the creator</li>
+      <li>founding builder status</li>
+      <li>Kickstarter launch notification</li>
+      <li>early backer rewards</li>
+    </ul>
+  </div>
+  Old prelaunch block end -->
+</section>

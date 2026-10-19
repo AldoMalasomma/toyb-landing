@@ -1,0 +1,1259 @@
+---
+import FeatureGrid from "../components/FeatureGrid.astro";
+import Hero from "../components/Hero.astro";
+import Section from "../components/Section.astro";
+import { getImage } from "astro:assets";
+import workspaceOverviewPng from "../assets/landing/01-dashboard-overview.png";
+import graphPreviewPng from "../assets/landing/02-graph-narrative-no-context-menu.png";
+import timelinePreviewPng from "../assets/landing/03-timeline-cinematica.png";
+import aiInsightsPreviewPng from "../assets/landing/07-ai-insights-panel.png";
+import projectHealthPreviewPng from "../assets/landing/08-project-health.png";
+import { getPrivacyHref, PRIVACY_VERSION } from "../lib/privacy";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+export const prerender = true;
+const waitlistTurnstileEnabled =
+  import.meta.env.WAITLIST_TURNSTILE_ENABLED === "true";
+const turnstileSiteKey = import.meta.env.TURNSTILE_SITE_KEY ?? "";
+const privacyHref = getPrivacyHref();
+
+// Keep legacy copy available for quick rollback.
+const legacyCopy = {
+  prelaunchContext: [
+    "Toyb has been in development for six months and is now nearing its first public release.",
+    "Built by a solo founder focused on narrative systems.",
+    "Kickstarter campaign launching soon.",
+  ],
+  founderNote:
+    "Toyb was built out of frustration with tools that treat worlds like folders. I wanted something that thinks in systems. If you build in systems too, you'll feel at home here.",
+  whatIs: [
+    "Toyb is a narrative systems engine that helps creators build, connect, and explore fictional universes as structured ecosystems — not scattered files.",
+    "Instead of storing lore in folders or isolated documents, Toyb visualizes and maps relationships between characters, events, factions, plots, and locations. It reveals hidden dependencies, clarifies timeline logic, and helps detect contradictions early.",
+    "Whether you’re crafting a novel, a game world, or a complex mythos, Toyb gives you the tools to manage and grow your narrative without losing coherence.",
+  ],
+  waitlist: {
+    title: "Become a founding system builder.",
+    subtitle:
+      "The first cohort will shape Toyb’s architecture and evolution before public release.",
+    note: "Direct access. Private channel. Lifetime founding status.",
+    reassurance:
+      "Early access users receive the private beta invite and early Kickstarter launch notification.",
+    cta: "Join the founding cohort",
+  },
+  why: {
+    subtitle:
+      "A calm interface for complex creative systems. Minimal surface, maximum control.",
+    items: [
+      {
+        title: "Projects as universes",
+        text: "Model creative work as interconnected systems instead of isolated files and folders.",
+      },
+      {
+        title: "Narrative graph & timeline",
+        text: "Track relationships, chronology, and dependencies without losing clarity.",
+      },
+      {
+        title: "AI-assisted coherence checks",
+        text: "Surface contradictions early while preserving author intent and stylistic control.",
+      },
+    ],
+  },
+  creators: {
+    subtitle:
+      "For writers and worldbuilders who design universes as interconnected structures — not loose documents.",
+    bullets: [
+      "Model characters, plots, factions, and locations as relational components.",
+      "Build modular worlds that evolve without collapsing under their own complexity.",
+      "Make constraints visible so coherence scales with ambition.",
+    ],
+    visualAlt: "Toyb narrative graph preview",
+  },
+  preview: {
+    subtitle:
+      "Toyb turns characters, plots, factions, timelines, and worlds into a living relational system — not a folder tree.",
+    summaryLead: "See your universe as a structured network — not scattered notes.",
+    summaryLine1: "Characters link to plots.",
+    summaryLine2: "Events sit on timelines.",
+    summaryLine3: "Factions shape arcs.",
+    summaryLine4: "Track dependencies. Surface contradictions.",
+    summaryLine5: "Strengthen coherence before complexity turns into chaos.",
+    statementLine1: "This isn’t a writing tool.",
+    statementLine2: "It’s infrastructure for narrative systems.",
+    note: "Early members help shape the system before public launch.",
+    ctaPrimary: "Get early access",
+    ctaSecondary: "See how it works",
+  },
+  workspace: {
+    subtitle: "See your universe at a glance.",
+    copy: "Track entities, timelines, narrative signals, and project health from one unified workspace.",
+  },
+} as const;
+
+const uiCopy = {
+  prelaunchContext: [
+    "Toyb is now entering its first private release phase.",
+    "Toyb replaces folder-based worldbuilding workflows with a system-oriented workspace.",
+    "Kickstarter launch planned for next month. Early access includes launch notification and early backer rewards.",
+  ],
+  founderNote:
+    "Built by a solo founder focused on narrative systems.",
+  whatIs: [
+    "Toyb is a narrative systems platform for managing projects as connected data, not scattered files.",
+    "Track relationships across characters, events, factions, plots, and locations in one operational model.",
+    "Monitor dependencies, detect contradictions early, and keep narrative state consistent as scope grows.",
+  ],
+  waitlist: {
+    title: "Request early access.",
+    subtitle:
+      "Join the private pre-launch cohort to access the beta and help validate core workflows before public release.",
+    note: "Early beta access. Founding community. Direct feedback channel with the founder.",
+    reassurance:
+      "No spam. Just occasional updates about early access and launch.",
+    cta: "Get early access",
+  },
+  why: {
+    subtitle:
+      "Operational controls for complex narrative projects. Minimal surface, maximum clarity.",
+    items: [
+      {
+        title: "Projects as systems",
+        text: "Model creative work as linked entities instead of isolated documents and folders.",
+      },
+      {
+        title: "Graph + timeline control",
+        text: "Review relationships, chronology, and dependencies in one structured interface.",
+      },
+      {
+        title: "Coherence checks",
+        text: "Detect contradictions early and resolve narrative conflicts before they scale.",
+      },
+    ],
+  },
+  creators: {
+    subtitle:
+      "For writers and worldbuilders who need structured control across interconnected narrative components.",
+    bullets: [
+      "Model characters, plots, factions, and locations as linked records.",
+      "Keep timeline and dependency logic explicit as projects scale.",
+      "Reduce rework by surfacing constraints early.",
+    ],
+    visualAlt: "Toyb narrative graph interface",
+  },
+  preview: {
+    subtitle:
+      "Operate graph, timeline, insights, and health views as one coherent narrative workflow.",
+    summaryLead:
+      "Run your project as a connected system instead of disconnected notes.",
+    summaryLine1: "Characters link to plots.",
+    summaryLine2: "Events map to timelines.",
+    summaryLine3: "Factions track influence across arcs.",
+    summaryLine4: "Monitor dependencies. Resolve contradictions early.",
+    summaryLine5: "Maintain consistency as project complexity grows.",
+    statementLine1: "Not a generic writing app.",
+    statementLine2: "A control layer for narrative systems.",
+    note: "Early access users help prioritize workflows before public launch.",
+    ctaPrimary: "Get early access",
+    ctaSecondary: "See how it works",
+  },
+  workspace: {
+    subtitle: "Project workspace overview.",
+    copy: "Track entities, timelines, narrative signals, and project health from one unified workspace.",
+  },
+} as const;
+
+const copyVersion: "ui" | "legacy" =
+  import.meta.env.PUBLIC_COPY_VERSION === "legacy" ? "legacy" : "ui";
+const copy = copyVersion === "legacy" ? legacyCopy : uiCopy;
+
+const whyItems = copy.why.items.map((item) => ({ ...item }));
+const creatorBullets = [...copy.creators.bullets];
+
+const previewImageSizes =
+  "(max-width: 47.99rem) calc(100vw - 3.3rem), (max-width: 72rem) calc(100vw - 8rem), 532px";
+const workspaceImageSizes =
+  "(max-width: 47.99rem) calc(100vw - 3.3rem), (max-width: 72rem) calc(100vw - 5rem), 960px";
+const transparentPixel =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+
+const previewSlides = await Promise.all([
+  {
+    stage: "structure",
+    label: "Narrative Graph",
+    asset: graphPreviewPng,
+    src: "/images/landing/1920x1080/02-graph-narrative-no-context-menu.png",
+    srcWebp: "/images/landing/1920x1080/02-graph-narrative-no-context-menu.webp",
+    alt: "Narrative Graph view showing connections between story entities.",
+  },
+  {
+    stage: "time",
+    label: "Timeline",
+    asset: timelinePreviewPng,
+    src: "/images/landing/1920x1080/03-timeline-cinematica.png",
+    srcWebp: "/images/landing/1920x1080/03-timeline-cinematica.webp",
+    alt: "Timeline view mapping events and sequence across the narrative.",
+  },
+  {
+    stage: "analysis",
+    label: "AI Insights",
+    asset: aiInsightsPreviewPng,
+    src: "/images/landing/1920x1080/07-ai-insights-panel.png",
+    srcWebp: "/images/landing/1920x1080/07-ai-insights-panel.webp",
+    alt: "AI Insights panel surfacing narrative issues and recommendations.",
+  },
+  {
+    stage: "integrity",
+    label: "Project Health",
+    asset: projectHealthPreviewPng,
+    src: "/images/landing/1920x1080/08-project-health.png",
+    srcWebp: "/images/landing/1920x1080/08-project-health.webp",
+    alt: "Project Health view validating consistency across the system.",
+  },
+].map(async (slide) => ({
+  ...slide,
+  previewImage: await getImage({
+    src: slide.asset,
+    widths: [360, 532, 800, 1064],
+    sizes: previewImageSizes,
+    format: "webp",
+    quality: "mid",
+  }),
+})));
+
+const workspaceOverview = {
+  asset: workspaceOverviewPng,
+  src: "/images/landing/1920x1080/01-dashboard-overview.png",
+  srcWebp: "/images/landing/1920x1080/01-dashboard-overview.webp",
+  alt: "Toyb workspace overview showing unified project cockpit with entities, timeline, signals, and health.",
+  caption: "Workspace Overview · unified cockpit",
+  previewImage: await getImage({
+    src: workspaceOverviewPng,
+    widths: [640, 960, 1280],
+    sizes: workspaceImageSizes,
+    format: "webp",
+    quality: "mid",
+  }),
+} as const;
+---
+
+<BaseLayout
+  title="toyb | Build universes. Break complexity."
+  description="Toyb is a modular worldbuilding engine for creators who think in systems."
+  canonical="https://toyb.space/"
+>
+  <Hero />
+
+  <!-- Old prelaunch block start -->
+  <!--
+  <section class="prelaunch-context" aria-label="Pre-launch context" data-reveal>
+    <p>{copy.prelaunchContext[0]}</p>
+    <p>{copy.prelaunchContext[1]}</p>
+    <p>{copy.prelaunchContext[2]}</p>
+  </section>
+
+  <section class="founder-note" aria-label="Founder note" data-reveal>
+    <p class="founder-note__text">{copy.founderNote}</p>
+  </section>
+  -->
+  <!-- Old prelaunch block end -->
+
+  <section class="founder-note" aria-label="Early access briefing" data-reveal>
+    <p class="hero-early-access-benefits__title">Early access includes:</p>
+    <ul class="hero-early-access-benefits__list">
+      <li>invitation to the private beta</li>
+      <li>access to the founding community</li>
+      <li>direct feedback with the creator</li>
+      <li>founding builder status</li>
+      <li>Kickstarter launch notification</li>
+      <li>early backer rewards</li>
+    </ul>
+    <div class="waitlist__consents" style="margin-top: var(--space-3);">
+      <p class="waitlist__note">
+        Toyb replaces folder-based worldbuilding workflows with a
+        system-oriented workspace.
+      </p>
+      <p class="waitlist__note">
+        Toyb is entering its first private release phase with early testers.
+      </p>
+      <p class="waitlist__note">
+        The public launch is planned for Kickstarter next month.
+      </p>
+      <p class="waitlist__note">
+        Built by a solo founder focused on narrative systems.
+      </p>
+    </div>
+  </section>
+
+  <Section id="what-is-toyb" title="What is Toyb?">
+    <p>{copy.whatIs[0]}</p>
+    <p>{copy.whatIs[1]}</p>
+    <p>{copy.whatIs[2]}</p>
+  </Section>
+
+  <section class="waitlist" aria-labelledby="waitlist-title" data-reveal>
+    <h2 id="waitlist-title">{copy.waitlist.title}</h2>
+    <p class="waitlist__sub">{copy.waitlist.subtitle}</p>
+    <p class="waitlist__note">{copy.waitlist.note}</p>
+    <p class="waitlist__reassurance">{copy.waitlist.reassurance}</p>
+    <form
+      class="waitlist__form"
+      data-waitlist-form
+      data-privacy-version={PRIVACY_VERSION}
+      autocomplete="off"
+    >
+      <div class="waitlist__row">
+        <label class="sr-only" for="waitlist-email">Email address</label>
+        <input
+          id="waitlist-email"
+          class="waitlist__input"
+          name="email"
+          type="email"
+          autocomplete="email"
+          placeholder="Your email"
+          required
+        />
+        <button class="button button-primary waitlist__button" type="submit">
+          {copy.waitlist.cta}
+        </button>
+      </div>
+      <div class="waitlist__honeypot" aria-hidden="true">
+        <label for="waitlist-company">Company</label>
+        <input
+          id="waitlist-company"
+          name="company"
+          type="text"
+          tabindex="-1"
+          autocomplete="off"
+          readonly
+        />
+      </div>
+      <div class="waitlist__consents">
+        <label class="waitlist__consent">
+          <input
+            class="waitlist__checkbox"
+            name="age_privacy_confirmed"
+            type="checkbox"
+            required
+          />
+          <span>
+            I declare I am at least 16 years old.{" "}
+            <a href={privacyHref} data-privacy-version={PRIVACY_VERSION}
+              >Privacy policy</a
+            >.
+          </span>
+        </label>
+        <label class="waitlist__consent">
+          <input
+            class="waitlist__checkbox"
+            name="marketing_consent"
+            type="checkbox"
+          />
+          <span>
+            I consent to receive promotional emails and launch updates
+            (newsletter).
+          </span>
+        </label>
+      </div>
+      {
+        waitlistTurnstileEnabled && (
+          <div class="waitlist__turnstile">
+            <div class="cf-turnstile" data-sitekey={turnstileSiteKey} />
+          </div>
+        )
+      }
+    </form>
+    <p class="waitlist__feedback" aria-live="polite" data-waitlist-feedback></p>
+  </section>
+
+  <Section
+    id="why-toyb"
+    title="Why Toyb"
+    subtitle={copy.why.subtitle}
+  >
+    <FeatureGrid items={whyItems} />
+  </Section>
+
+  <Section
+    id="creators"
+    title="Built for system thinkers."
+    subtitle={copy.creators.subtitle}
+  >
+    <div class="creators-grid">
+      <ul class="bullets">
+        {creatorBullets.map((bullet) => <li>{bullet}</li>)}
+      </ul>
+      <aside class="micro-visual" aria-label="Narrative graph preview">
+        <picture class="micro-visual__picture">
+          <source
+            type="image/webp"
+            srcset="/images/landing/toyb-narrative-graph.webp"
+          />
+          <img
+            class="micro-visual__image"
+            src="/images/landing/toyb-narrative-graph.png"
+            alt={copy.creators.visualAlt}
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+      </aside>
+    </div>
+  </Section>
+
+  <Section
+    id="preview"
+    title="Inside the engine."
+    subtitle={copy.preview.subtitle}
+  >
+    <article class="preview-card">
+      <div class="preview-frame">
+        <div class="preview-carousel" data-preview-carousel>
+          <div class="preview-carousel__viewport" data-preview-viewport>
+            <div class="preview-carousel__track" data-preview-track>
+              {
+                previewSlides.map((slide, index) => (
+                  <figure
+                    class="preview-carousel__slide"
+                    data-preview-slide
+                    data-preview-src={slide.src}
+                    data-preview-src-webp={slide.srcWebp}
+                    data-preview-image-src={slide.previewImage.src}
+                    data-preview-image-srcset={slide.previewImage.srcSet.attribute}
+                    data-preview-caption={`${slide.label} · ${slide.stage}`}
+                    aria-hidden={index === 0 ? "false" : "true"}
+                  >
+                    <button
+                      type="button"
+                      class="preview-carousel__image-button"
+                      data-preview-open={index}
+                      aria-label={`Open ${slide.label} screenshot in fullscreen`}
+                      tabindex={index === 0 ? 0 : -1}
+                    >
+                      <img
+                        class="preview-carousel__image"
+                        data-preview-image
+                        data-preview-hydrated={index === 0 ? "true" : undefined}
+                        src={
+                          index === 0
+                            ? slide.previewImage.src
+                            : transparentPixel
+                        }
+                        srcset={index === 0 ? slide.previewImage.srcSet.attribute : undefined}
+                        sizes={previewImageSizes}
+                        width={slide.previewImage.attributes.width}
+                        height={slide.previewImage.attributes.height}
+                        alt={slide.alt}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchpriority={index === 0 ? "high" : undefined}
+                      />
+                    </button>
+                    <figcaption class="preview-carousel__caption">
+                      <span>{slide.label}</span>
+                      <small>{slide.stage}</small>
+                    </figcaption>
+                  </figure>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="preview-carousel__controls" aria-label="Engine preview controls">
+            <button
+              type="button"
+              class="preview-carousel__arrow"
+              data-preview-prev
+              aria-label="Previous slide"
+            >
+              <span aria-hidden="true">&larr;</span>
+            </button>
+            <div class="preview-carousel__dots" role="tablist" aria-label="Choose slide">
+              {
+                previewSlides.map((slide, index) => (
+                  <button
+                    type="button"
+                    class={`preview-carousel__dot ${index === 0 ? "is-active" : ""}`}
+                    data-preview-dot={index}
+                    role="tab"
+                    aria-label={`Go to ${slide.label}`}
+                    aria-selected={index === 0 ? "true" : "false"}
+                  />
+                ))
+              }
+            </div>
+            <button
+              type="button"
+              class="preview-carousel__arrow"
+              data-preview-next
+              aria-label="Next slide"
+            >
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <p>
+        {copy.preview.summaryLead}<br />
+        <br />
+        {copy.preview.summaryLine1}<br />
+        {copy.preview.summaryLine2}<br />
+        {copy.preview.summaryLine3}<br />
+        <br />
+        {copy.preview.summaryLine4}<br />
+        {copy.preview.summaryLine5}
+      </p>
+      <p>
+        {copy.preview.statementLine1}<br />
+        {copy.preview.statementLine2}
+      </p>
+      <p class="preview-note">{copy.preview.note}</p>
+      <div class="hero-actions" aria-label="Preview actions">
+        <a
+          class="button button-primary"
+          href="/#waitlist-title"
+          data-track="cta_preview_access">{copy.preview.ctaPrimary}</a
+        >
+        <a class="button" href="/#why-toyb" data-track="cta_preview_learn"
+          >{copy.preview.ctaSecondary}</a
+        >
+      </div>
+    </article>
+
+    <div class="preview-lightbox" data-preview-lightbox hidden aria-hidden="true">
+      <div class="preview-lightbox__scrim" data-preview-close></div>
+      <div
+        class="preview-lightbox__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Inside the engine gallery"
+      >
+        <button
+          type="button"
+          class="preview-lightbox__close"
+          data-preview-close
+          aria-label="Close fullscreen viewer"
+        >
+          <span aria-hidden="true">X</span>
+        </button>
+
+        <button
+          type="button"
+          class="preview-lightbox__nav preview-lightbox__nav--prev"
+          data-preview-lightbox-prev
+          aria-label="Previous screenshot"
+        >
+          <span aria-hidden="true">&larr;</span>
+        </button>
+
+        <figure class="preview-lightbox__figure">
+          <picture class="preview-lightbox__picture">
+              <source
+              type="image/webp"
+              data-preview-lightbox-source
+              srcset=""
+            />
+            <img
+              class="preview-lightbox__image"
+              data-preview-lightbox-image
+              src={transparentPixel}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
+          <figcaption
+            class="preview-lightbox__caption"
+            data-preview-lightbox-caption
+          >
+            {previewSlides[0].label} · {previewSlides[0].stage}
+          </figcaption>
+        </figure>
+
+        <button
+          type="button"
+          class="preview-lightbox__nav preview-lightbox__nav--next"
+          data-preview-lightbox-next
+          aria-label="Next screenshot"
+        >
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+      </div>
+    </div>
+  </Section>
+
+  <Section
+    id="workspace-overview"
+    title="The Toyb workspace"
+    subtitle={copy.workspace.subtitle}
+  >
+    <article class="workspace-panel">
+      <p class="workspace-panel__copy">{copy.workspace.copy}</p>
+
+      <button
+        type="button"
+        class="workspace-shot"
+        data-workspace-open
+        data-workspace-src={workspaceOverview.src}
+        data-workspace-src-webp={workspaceOverview.srcWebp}
+        data-workspace-caption={workspaceOverview.caption}
+        aria-label="Open Toyb workspace overview in fullscreen"
+      >
+        <img
+          class="workspace-shot__image"
+          src={workspaceOverview.previewImage.src}
+          srcset={workspaceOverview.previewImage.srcSet.attribute}
+          sizes={workspaceImageSizes}
+          width={workspaceOverview.previewImage.attributes.width}
+          height={workspaceOverview.previewImage.attributes.height}
+          alt={workspaceOverview.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </button>
+    </article>
+  </Section>
+
+  <!-- Founder section previous layout start -->
+  <!--
+  <section id="founder" class="section founder-origin" aria-labelledby="founder-title" data-reveal>
+    <div class="founder-origin__inner">
+      <img
+        class="founder-origin__portrait"
+        src="/images/assets/founder-aldo-malasomma.webp"
+        alt="Portrait of Aldo G. Malasomma"
+        width="112"
+        height="112"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="founder-origin__content">
+        <h2 id="founder-title">Built by a solo founder</h2>
+        <p>
+          Toyb is developed by Aldo G. Malasomma, an independent developer with
+          15+ years of experience building web systems and creative tools.
+        </p>
+        <p>
+          The idea came while working on a large science-fiction worldbuilding
+          project. Hundreds of notes, character ideas, technologies, and plot
+          fragments had grown across files, notebooks, and devices.
+        </p>
+        <p>
+          Managing that complexity became harder than writing the story itself.
+        </p>
+        <p>
+          Toyb was created to solve that problem: treating narrative worlds as
+          structured systems instead of scattered files.
+        </p>
+        <p>
+          Aldo relocated to Estonia to build the project inside one of Europe’s
+          most active digital startup ecosystems.
+        </p>
+        <p class="founder-origin__link">
+          <a
+            href="https://www.linkedin.com/in/aldo-g-malasomma/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+        </p>
+      </div>
+    </div>
+  </section>
+  -->
+  <!-- Founder section previous layout end -->
+
+  <section id="founder" class="section founder-origin" aria-labelledby="founder-title" data-reveal>
+    <header class="founder-origin__head">
+      <h2 id="founder-title">Built by a solo founder</h2>
+    </header>
+    <div class="founder-origin__row">
+      <img
+        class="founder-origin__portrait"
+        src="/images/assets/founder-aldo-malasomma.webp"
+        alt="Portrait of Aldo G. Malasomma"
+        width="104"
+        height="104"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="founder-origin__content">
+        <p>
+          Toyb is developed by Aldo G. Malasomma, an independent developer with
+          15+ years of experience building web systems and creative tools.
+        </p>
+        <p>
+          The idea came while working on a large science-fiction worldbuilding
+          project. Hundreds of notes, character ideas, technologies, and plot
+          fragments had grown across files, notebooks, and devices.
+        </p>
+        <p>
+          Managing that complexity became harder than writing the story itself.
+        </p>
+        <p>
+          Toyb was created to solve that problem: treating narrative worlds as
+          structured systems instead of scattered files.
+        </p>
+        <p>
+          Aldo relocated to Estonia to build the project inside one of Europe’s
+          most active digital startup ecosystems.
+        </p>
+        <p class="founder-origin__link">
+          <a
+            href="https://www.linkedin.com/in/aldo-g-malasomma/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .founder-origin {
+      margin-top: calc(var(--space-8) + var(--space-3));
+      margin-bottom: var(--space-6);
+    }
+
+    .founder-origin__head {
+      text-align: center;
+      margin-bottom: var(--space-6);
+    }
+
+    .founder-origin__head h2 {
+      margin: 0;
+    }
+
+    .founder-origin__row {
+      display: grid;
+      grid-template-columns: minmax(6rem, 6.5rem) minmax(0, 1fr);
+      gap: var(--space-6);
+      align-items: start;
+      max-width: 56rem;
+      margin-inline: auto;
+    }
+
+    .founder-origin__portrait {
+      width: clamp(6rem, 9vw, 6.5rem);
+      height: clamp(6rem, 9vw, 6.5rem);
+      border-radius: 999px;
+      object-fit: cover;
+      object-position: center;
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--border) 78%, transparent);
+    }
+
+    .founder-origin__content {
+      max-width: 46rem;
+      display: grid;
+      gap: var(--space-4);
+      text-align: left;
+    }
+
+    .founder-origin__content p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.01rem;
+      line-height: 1.72;
+    }
+
+    .founder-origin__link a {
+      color: color-mix(in srgb, var(--accent) 55%, var(--text));
+      font-size: 0.98rem;
+      text-underline-offset: 0.2em;
+    }
+
+    .founder-origin__link a:hover {
+      color: var(--text);
+    }
+
+    @media (max-width: 47.99rem) {
+      .founder-origin__head {
+        margin-bottom: var(--space-4);
+      }
+
+      .founder-origin__row {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+      }
+
+      .founder-origin__portrait {
+        width: clamp(5.8rem, 24vw, 6.5rem);
+        height: clamp(5.8rem, 24vw, 6.5rem);
+      }
+    }
+  </style>
+
+  <script>
+    const track = (_event: string, _payload?: Record<string, unknown>) => {};
+
+    const form = document.querySelector("[data-waitlist-form]");
+    const feedback = document.querySelector("[data-waitlist-feedback]");
+
+    if (form instanceof HTMLFormElement && feedback instanceof HTMLElement) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const emailField = form.elements.namedItem("email");
+        const companyField = form.elements.namedItem("company");
+        const agePrivacyField =
+          form.elements.namedItem("age_privacy_confirmed");
+        const marketingConsentField =
+          form.elements.namedItem("marketing_consent");
+        const turnstileField = form.querySelector(
+          'input[name="cf-turnstile-response"]',
+        );
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (!(emailField instanceof HTMLInputElement)) return;
+        if (!(companyField instanceof HTMLInputElement)) return;
+        if (!(agePrivacyField instanceof HTMLInputElement)) return;
+        if (!(marketingConsentField instanceof HTMLInputElement)) return;
+        if (!(submitButton instanceof HTMLButtonElement)) return;
+        const turnstileToken =
+          turnstileField instanceof HTMLInputElement
+            ? turnstileField.value.trim()
+            : "";
+
+        if (!emailField.checkValidity()) {
+          emailField.reportValidity();
+          return;
+        }
+        if (!agePrivacyField.checked) {
+          feedback.textContent =
+            "Please confirm you are at least 16 and accept the Privacy Policy.";
+          agePrivacyField.reportValidity();
+          return;
+        }
+
+        const email = emailField.value.trim();
+        if (!email) return;
+        const privacyVersion = form.dataset.privacyVersion ?? "";
+
+        feedback.textContent = "";
+        submitButton.disabled = true;
+
+        fetch("/api/waitlist", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            email,
+            source: "landing",
+            company: companyField.value.trim(),
+            turnstileToken,
+            age_confirmed: agePrivacyField.checked,
+            privacy_accepted: agePrivacyField.checked,
+            marketing_consent: marketingConsentField.checked,
+            privacy_version: privacyVersion,
+          }),
+        })
+          .then(async (response) => {
+            const result = (await response.json().catch(() => null)) as {
+              status: "ok" | "error" | "forbidden";
+              email?: string;
+              inserted?: boolean;
+              updated?: boolean;
+              email_sent?: boolean;
+              email_error_code?: string;
+              code?: string;
+            } | null;
+            if (!response.ok || !result) {
+              throw new Error(result?.code ?? `waitlist_${response.status}`);
+            }
+            return result as {
+              status: "ok";
+              inserted: boolean;
+              updated: boolean;
+              email_sent: boolean;
+              email_error_code?: string;
+            };
+          })
+          .then((result) => {
+            if (result.status !== "ok") {
+              throw new Error("waitlist_unknown");
+            }
+
+            if (result.email_sent) {
+              feedback.textContent = "You're on the list. Check your inbox.";
+            } else {
+              feedback.textContent =
+                "You're on the list, but we could not send the email. Retry in a moment or contact support.";
+            }
+
+            track("waitlist_submit", {
+              inserted: result.inserted,
+              updated: result.updated,
+              email_sent: result.email_sent,
+              email_error_code: result.email_error_code ?? "none",
+              path: window.location.pathname,
+            });
+            form.reset();
+          })
+          .catch((error) => {
+            const message =
+              error instanceof Error ? error.message : "unknown_error";
+            if (message === "forbidden_origin") {
+              feedback.textContent =
+                "This origin is not allowed for submissions.";
+              return;
+            }
+            if (message === "invalid_request") {
+              feedback.textContent = "Please check the email and try again.";
+              return;
+            }
+            if (message === "age_required") {
+              feedback.textContent =
+                "Please confirm you are at least 16 years old.";
+              return;
+            }
+            if (message === "privacy_required") {
+              feedback.textContent =
+                "Please accept the Privacy Policy to continue.";
+              return;
+            }
+            if (message === "rate_limited") {
+              feedback.textContent = "Too many attempts. Try again later.";
+              return;
+            }
+            if (message === "server_error") {
+              feedback.textContent =
+                "Service is temporarily unavailable. Try again shortly.";
+              return;
+            }
+            feedback.textContent = "Something went wrong. Try again.";
+          })
+          .finally(() => {
+            submitButton.disabled = false;
+          });
+      });
+    }
+
+    const previewCarousel = document.querySelector("[data-preview-carousel]");
+    const previewLightbox = document.querySelector("[data-preview-lightbox]");
+
+    if (previewCarousel instanceof HTMLElement) {
+      if (
+        previewLightbox instanceof HTMLElement &&
+        previewLightbox.parentElement !== document.body
+      ) {
+        // Keep the fixed modal anchored to viewport, not to transformed ancestors.
+        document.body.appendChild(previewLightbox);
+      }
+
+      const trackEl = previewCarousel.querySelector("[data-preview-track]");
+      const viewportEl = previewCarousel.querySelector("[data-preview-viewport]");
+      const slides = Array.from(
+        previewCarousel.querySelectorAll("[data-preview-slide]"),
+      );
+      const prevButton = previewCarousel.querySelector("[data-preview-prev]");
+      const nextButton = previewCarousel.querySelector("[data-preview-next]");
+      const dotButtons = Array.from(
+        previewCarousel.querySelectorAll("[data-preview-dot]"),
+      );
+      const openButtons = Array.from(
+        previewCarousel.querySelectorAll("[data-preview-open]"),
+      );
+      const workspaceOpenButton = document.querySelector(
+        "[data-workspace-open]",
+      );
+
+      const lightboxImage = previewLightbox?.querySelector(
+        "[data-preview-lightbox-image]",
+      );
+      const lightboxSource = previewLightbox?.querySelector(
+        "[data-preview-lightbox-source]",
+      );
+      const lightboxCaption = previewLightbox?.querySelector(
+        "[data-preview-lightbox-caption]",
+      );
+      const lightboxPrevButton = previewLightbox?.querySelector(
+        "[data-preview-lightbox-prev]",
+      );
+      const lightboxNextButton = previewLightbox?.querySelector(
+        "[data-preview-lightbox-next]",
+      );
+      const lightboxCloseButton = previewLightbox?.querySelector(
+        ".preview-lightbox__close",
+      );
+
+      if (trackEl instanceof HTMLElement && slides.length > 0) {
+        const slideCount = slides.length;
+        let activeIndex = 0;
+        let lightboxOpen = false;
+        let lastFocused: HTMLElement | null = null;
+        const lightboxItems: Array<{
+          src: string;
+          srcWebp: string;
+          alt: string;
+          caption: string;
+        }> = [];
+
+        const normalizeIndex = (value: number) =>
+          ((value % slideCount) + slideCount) % slideCount;
+
+        slides.forEach((slide) => {
+          if (!(slide instanceof HTMLElement)) return;
+          const slideImage = slide.querySelector("img");
+          if (!(slideImage instanceof HTMLImageElement)) return;
+          lightboxItems.push({
+            src: slide.dataset.previewSrc ?? slideImage.src,
+            srcWebp: slide.dataset.previewSrcWebp ?? "",
+            alt: slideImage.alt,
+            caption: slide.dataset.previewCaption ?? slideImage.alt,
+          });
+        });
+
+        let workspaceLightboxIndex = -1;
+        if (workspaceOpenButton instanceof HTMLButtonElement) {
+          const workspaceImage = workspaceOpenButton.querySelector("img");
+          if (workspaceImage instanceof HTMLImageElement) {
+            workspaceLightboxIndex = lightboxItems.push({
+              src: workspaceOpenButton.dataset.workspaceSrc ?? workspaceImage.src,
+              srcWebp: workspaceOpenButton.dataset.workspaceSrcWebp ?? "",
+              alt: workspaceImage.alt,
+              caption:
+                workspaceOpenButton.dataset.workspaceCaption ??
+                workspaceImage.alt,
+            }) - 1;
+          }
+        }
+
+        const lightboxCount = lightboxItems.length;
+        const normalizeLightboxIndex = (value: number) => {
+          if (lightboxCount === 0) return 0;
+          return ((value % lightboxCount) + lightboxCount) % lightboxCount;
+        };
+        let lightboxIndex = 0;
+
+        const hydratePreviewImage = (
+          slide: HTMLElement,
+          slideImage: HTMLImageElement,
+        ) => {
+          if (slideImage.dataset.previewHydrated === "true") return;
+          const src = slide.dataset.previewImageSrc;
+          const srcset = slide.dataset.previewImageSrcset;
+          if (!src || !srcset) return;
+          slideImage.src = src;
+          slideImage.srcset = srcset;
+          slideImage.sizes = previewImageSizes;
+          slideImage.dataset.previewHydrated = "true";
+        };
+
+        const syncLightbox = () => {
+          if (!lightboxOpen) return;
+          if (!(lightboxImage instanceof HTMLImageElement)) return;
+          if (!(lightboxCaption instanceof HTMLElement)) return;
+          const item = lightboxItems[normalizeLightboxIndex(lightboxIndex)];
+          if (!item) return;
+          lightboxImage.src = item.src;
+          lightboxImage.alt = item.alt;
+          if (lightboxSource instanceof HTMLSourceElement) {
+            lightboxSource.srcset = item.srcWebp;
+          }
+          lightboxCaption.textContent = item.caption;
+        };
+
+        const renderCarousel = () => {
+          trackEl.style.transform = `translateX(-${activeIndex * 100}%)`;
+          slides.forEach((slide, index) => {
+            slide.setAttribute(
+              "aria-hidden",
+              index === activeIndex ? "false" : "true",
+            );
+            if (!(slide instanceof HTMLElement)) return;
+            const button = slide.querySelector("[data-preview-open]");
+            if (button instanceof HTMLButtonElement) {
+              button.tabIndex = index === activeIndex ? 0 : -1;
+            }
+            const slideImage = slide.querySelector("[data-preview-image]");
+            if (!(slideImage instanceof HTMLImageElement)) return;
+            if (index === activeIndex) {
+              hydratePreviewImage(slide, slideImage);
+            }
+          });
+          dotButtons.forEach((dot, index) => {
+            if (!(dot instanceof HTMLButtonElement)) return;
+            dot.classList.toggle("is-active", index === activeIndex);
+            dot.setAttribute(
+              "aria-selected",
+              index === activeIndex ? "true" : "false",
+            );
+          });
+        };
+
+        const goToSlide = (nextIndex: number) => {
+          activeIndex = normalizeIndex(nextIndex);
+          renderCarousel();
+        };
+
+        const goToLightboxItem = (nextIndex: number) => {
+          if (lightboxCount === 0) return;
+          lightboxIndex = normalizeLightboxIndex(nextIndex);
+          if (lightboxIndex < slideCount) {
+            goToSlide(lightboxIndex);
+          }
+          syncLightbox();
+        };
+
+        const openLightbox = (index: number) => {
+          if (!(previewLightbox instanceof HTMLElement)) return;
+          lastFocused =
+            document.activeElement instanceof HTMLElement
+              ? document.activeElement
+              : null;
+          if (index < slideCount) {
+            goToSlide(index);
+          }
+          lightboxIndex = normalizeLightboxIndex(index);
+          lightboxOpen = true;
+          previewLightbox.hidden = false;
+          previewLightbox.setAttribute("aria-hidden", "false");
+          document.body.classList.add("preview-lightbox-open");
+          syncLightbox();
+          if (lightboxCloseButton instanceof HTMLButtonElement) {
+            lightboxCloseButton.focus();
+          }
+        };
+
+        const closeLightbox = () => {
+          if (!(previewLightbox instanceof HTMLElement)) return;
+          if (!lightboxOpen) return;
+          lightboxOpen = false;
+          previewLightbox.hidden = true;
+          previewLightbox.setAttribute("aria-hidden", "true");
+          document.body.classList.remove("preview-lightbox-open");
+          if (lastFocused instanceof HTMLElement) {
+            lastFocused.focus();
+          }
+        };
+
+        if (prevButton instanceof HTMLButtonElement) {
+          prevButton.addEventListener("click", () => {
+            goToSlide(activeIndex - 1);
+          });
+        }
+
+        if (nextButton instanceof HTMLButtonElement) {
+          nextButton.addEventListener("click", () => {
+            goToSlide(activeIndex + 1);
+          });
+        }
+
+        dotButtons.forEach((dot) => {
+          if (!(dot instanceof HTMLButtonElement)) return;
+          dot.addEventListener("click", () => {
+            const value = Number.parseInt(dot.dataset.previewDot ?? "", 10);
+            if (Number.isNaN(value)) return;
+            goToSlide(value);
+          });
+        });
+
+        openButtons.forEach((button) => {
+          if (!(button instanceof HTMLButtonElement)) return;
+          button.addEventListener("click", () => {
+            const value = Number.parseInt(button.dataset.previewOpen ?? "", 10);
+            if (Number.isNaN(value)) return;
+            openLightbox(value);
+          });
+        });
+
+        if (
+          workspaceOpenButton instanceof HTMLButtonElement &&
+          workspaceLightboxIndex >= 0
+        ) {
+          workspaceOpenButton.addEventListener("click", () => {
+            openLightbox(workspaceLightboxIndex);
+          });
+        }
+
+        if (lightboxPrevButton instanceof HTMLButtonElement) {
+          lightboxPrevButton.addEventListener("click", () => {
+            goToLightboxItem(lightboxIndex - 1);
+          });
+        }
+
+        if (lightboxNextButton instanceof HTMLButtonElement) {
+          lightboxNextButton.addEventListener("click", () => {
+            goToLightboxItem(lightboxIndex + 1);
+          });
+        }
+
+        if (previewLightbox instanceof HTMLElement) {
+          previewLightbox.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (target.closest("[data-preview-close]")) {
+              closeLightbox();
+            }
+          });
+        }
+
+        document.addEventListener("keydown", (event) => {
+          if (!lightboxOpen) return;
+          if (event.key === "Escape") {
+            event.preventDefault();
+            closeLightbox();
+            return;
+          }
+          if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            goToLightboxItem(lightboxIndex - 1);
+            return;
+          }
+          if (event.key === "ArrowRight") {
+            event.preventDefault();
+            goToLightboxItem(lightboxIndex + 1);
+          }
+        });
+
+        if (viewportEl instanceof HTMLElement) {
+          let pointerActive = false;
+          let pointerId = -1;
+          let startX = 0;
+          let deltaX = 0;
+          const threshold = 48;
+
+          const finishSwipe = () => {
+            if (!pointerActive) return;
+            if (Math.abs(deltaX) >= threshold) {
+              goToSlide(activeIndex + (deltaX > 0 ? -1 : 1));
+            }
+            pointerActive = false;
+            pointerId = -1;
+            startX = 0;
+            deltaX = 0;
+          };
+
+          viewportEl.addEventListener("pointerdown", (event) => {
+            if (event.pointerType !== "touch") return;
+            pointerActive = true;
+            pointerId = event.pointerId;
+            startX = event.clientX;
+            deltaX = 0;
+          });
+
+          viewportEl.addEventListener("pointermove", (event) => {
+            if (!pointerActive || event.pointerId !== pointerId) return;
+            deltaX = event.clientX - startX;
+          });
+
+          viewportEl.addEventListener("pointerup", (event) => {
+            if (event.pointerId !== pointerId) return;
+            finishSwipe();
+          });
+
+          viewportEl.addEventListener("pointercancel", finishSwipe);
+        }
+
+        renderCarousel();
+      }
+    }
+  </script>
+  {
+    waitlistTurnstileEnabled && (
+      <script
+        is:inline
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        async
+        defer
+      />
+    )
+  }
+</BaseLayout>

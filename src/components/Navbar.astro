@@ -1,0 +1,133 @@
+---
+import Logo from "./Logo.astro";
+
+const currentPath = Astro.url.pathname;
+
+const links = [
+  { href: "/#why-toyb", label: "Why Toyb" },
+  { href: "/#creators", label: "Built for creators" },
+  { href: "/#preview", label: "Preview" },
+  {
+    href: "/origin",
+    label: "Origin",
+    track: "nav_origin",
+  },
+  {
+    href: "/#waitlist-title",
+    label: "Get early access",
+    emphasis: true,
+    track: "cta_nav_early_access",
+  },
+];
+---
+
+<div
+  class="navbar layout-shell"
+  data-reveal
+  data-nav-root
+  data-nav-open="false"
+>
+  <Logo size="sm" asLink={false} />
+
+  <button
+    class="nav-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="primary-nav-menu"
+    data-nav-toggle
+  >
+    <span class="sr-only">Toggle navigation</span>
+    <span class="nav-toggle__icon" aria-hidden="true">
+      <span class="nav-toggle__line"></span>
+      <span class="nav-toggle__line"></span>
+      <span class="nav-toggle__line"></span>
+    </span>
+  </button>
+
+  <nav id="primary-nav-menu" class="navbar-menu" aria-label="Primary" data-nav-menu>
+    <ul class="nav-links">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              class:list={["nav-link", link.emphasis && "nav-link--highlight"]}
+              href={link.href}
+              data-track={link.track}
+              aria-current={link.href === currentPath ? "page" : undefined}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</div>
+
+<noscript>
+  <style>
+    @media (max-width: 47.99rem) {
+      .navbar[data-nav-root] .nav-toggle {
+        display: none !important;
+      }
+
+      .navbar[data-nav-root] .navbar-menu {
+        display: block !important;
+      }
+    }
+  </style>
+</noscript>
+
+<script>
+  const navRoot = document.querySelector("[data-nav-root]");
+  if (navRoot instanceof HTMLElement) {
+    const toggle = navRoot.querySelector("[data-nav-toggle]");
+    const menu = navRoot.querySelector("[data-nav-menu]");
+    if (toggle instanceof HTMLButtonElement && menu instanceof HTMLElement) {
+      const mobileMq = window.matchMedia("(max-width: 47.99rem)");
+
+      const applyState = (open: boolean) => {
+        navRoot.setAttribute("data-nav-open", open ? "true" : "false");
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+
+      const syncForViewport = () => {
+        if (mobileMq.matches) {
+          const isOpen = navRoot.getAttribute("data-nav-open") === "true";
+          applyState(isOpen);
+        } else {
+          applyState(false);
+        }
+      };
+
+      applyState(false);
+      syncForViewport();
+
+      toggle.addEventListener("click", () => {
+        const isOpen = navRoot.getAttribute("data-nav-open") === "true";
+        applyState(!isOpen);
+      });
+
+      menu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => applyState(false));
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") applyState(false);
+      });
+
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+        if (
+          mobileMq.matches &&
+          target instanceof Node &&
+          !navRoot.contains(target)
+        ) {
+          applyState(false);
+        }
+      });
+
+      mobileMq.addEventListener("change", syncForViewport);
+    }
+  }
+</script>
