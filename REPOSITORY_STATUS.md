@@ -31,13 +31,19 @@ source directory was not modified.
 
 ## Verification status
 
-Pending in this staging copy:
+Results in this staging copy:
 
-- dependency installation from `package-lock.json`;
-- lint, formatting, typecheck and Astro checks;
-- automated tests;
-- production build;
-- accessibility test.
+- automated tests: **pass** — 4 test files, 4 tests passed;
+- production build: **pass** — Astro/Cloudflare build completed;
+- lint: **fails** — 7 existing findings, including `@ts-nocheck`, unused
+  parameters and `prefer-rest-params`;
+- formatting: **fails** — Prettier reports 43 files needing formatting;
+- typecheck: **fails** — 3 `ImportMeta.env` typing errors in API routes;
+- accessibility test: **not completed** — the managed execution environment
+  denied binding the local test server to `127.0.0.1:4173` (`EPERM`).
+
+The failures are recorded as repository debt and were not silently fixed in
+the staging copy.
 
 ## Visibility decision
 
