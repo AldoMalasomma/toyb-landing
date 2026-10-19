@@ -38,11 +38,8 @@ Results in this staging copy:
 - lint: **pass**;
 - formatting: **pass**;
 - typecheck and `astro check`: **pass** — 0 errors, 0 warnings, 0 hints;
-- accessibility test: **not completed** — the managed execution environment
-  denied binding the local test server to `127.0.0.1:4173` (`EPERM`).
-
-The remaining accessibility check requires an environment that permits a local
-HTTP server.
+- accessibility test: **pass** — axe-core checks passed for the tested routes
+  using WCAG 2 A/AA tags.
 
 ## Visibility decision
 
