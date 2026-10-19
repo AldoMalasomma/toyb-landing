@@ -57,7 +57,11 @@ const followLinks = [
           legalLinks.map((link) => (
             <li>
               {"action" in link && link.action ? (
-                <button type="button" class="footer-link-button" data-consent-open>
+                <button
+                  type="button"
+                  class="footer-link-button"
+                  data-consent-open
+                >
                   {link.label}
                 </button>
               ) : (

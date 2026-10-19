@@ -7,10 +7,13 @@ import {
 } from "../src/lib/admin-segment.js";
 
 test("campaign segment defaults and safety enforcement", () => {
-  const segment = normalizeCampaignSegment({}, {
-    defaultMarketingOnly: true,
-    defaultSubscribedOnly: true,
-  });
+  const segment = normalizeCampaignSegment(
+    {},
+    {
+      defaultMarketingOnly: true,
+      defaultSubscribedOnly: true,
+    },
+  );
 
   assert.equal(segment.marketing_only, true);
   assert.equal(segment.subscribed_only, true);
@@ -44,7 +47,10 @@ test("campaign recipient selection excludes unsubscribed and applies beta filter
 
   assert.equal(isCampaignRecipient(base, defaultSegment), true);
   assert.equal(
-    isCampaignRecipient({ ...base, unsubscribed_at: "2026-02-20T10:00:00Z" }, defaultSegment),
+    isCampaignRecipient(
+      { ...base, unsubscribed_at: "2026-02-20T10:00:00Z" },
+      defaultSegment,
+    ),
     false,
   );
   assert.equal(
@@ -52,7 +58,10 @@ test("campaign recipient selection excludes unsubscribed and applies beta filter
     false,
   );
   assert.equal(
-    isCampaignRecipient({ ...base, beta_invited_at: null }, { ...defaultSegment, beta: "invited" }),
+    isCampaignRecipient(
+      { ...base, beta_invited_at: null },
+      { ...defaultSegment, beta: "invited" },
+    ),
     false,
   );
   assert.equal(
@@ -63,11 +72,17 @@ test("campaign recipient selection excludes unsubscribed and applies beta filter
     true,
   );
   assert.equal(
-    isCampaignRecipient({ ...base, beta_active: false }, { ...defaultSegment, beta: "active" }),
+    isCampaignRecipient(
+      { ...base, beta_active: false },
+      { ...defaultSegment, beta: "active" },
+    ),
     false,
   );
   assert.equal(
-    isCampaignRecipient({ ...base, beta_active: true }, { ...defaultSegment, beta: "active" }),
+    isCampaignRecipient(
+      { ...base, beta_active: true },
+      { ...defaultSegment, beta: "active" },
+    ),
     true,
   );
 });

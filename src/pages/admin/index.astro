@@ -23,31 +23,42 @@ export const prerender = false;
       <button class="button button-primary" id="admin-token-save" type="button">
         Authenticate
       </button>
-      <button class="button" id="admin-token-clear" type="button">Logout</button>
+      <button class="button" id="admin-token-clear" type="button">Logout</button
+      >
     </div>
 
     <p class="admin-feedback" id="admin-feedback" aria-live="polite"></p>
 
     <div class="admin-stats" id="admin-stats">
-      <article class="admin-card"><h2>Total</h2><p id="stat-total">-</p></article>
+      <article class="admin-card">
+        <h2>Total</h2><p id="stat-total">-</p>
+      </article>
       <article class="admin-card">
         <h2>Marketing opt-in</h2>
         <p id="stat-marketing">-</p>
       </article>
-      <article class="admin-card"><h2>Unsubscribed</h2><p id="stat-unsubscribed">-</p></article>
-      <article class="admin-card"><h2>Last 7 days</h2><p id="stat-last7">-</p></article>
-      <article class="admin-card"><h2>Beta invited</h2><p id="stat-invited">-</p></article>
-      <article class="admin-card"><h2>Beta active</h2><p id="stat-active">-</p></article>
+      <article class="admin-card">
+        <h2>Unsubscribed</h2><p id="stat-unsubscribed">-</p>
+      </article>
+      <article class="admin-card">
+        <h2>Last 7 days</h2><p id="stat-last7">-</p>
+      </article>
+      <article class="admin-card">
+        <h2>Beta invited</h2><p id="stat-invited">-</p>
+      </article>
+      <article class="admin-card">
+        <h2>Beta active</h2><p id="stat-active">-</p>
+      </article>
     </div>
 
     <div class="hero-actions">
-      <a class="button button-primary" href="/admin/waitlist">Manage waitlist</a>
+      <a class="button button-primary" href="/admin/waitlist">Manage waitlist</a
+      >
       <a class="button" href="/admin/campaigns">Create campaign</a>
     </div>
   </section>
 
   <script>
-    // @ts-nocheck
     import { track } from "../../lib/analytics";
     import {
       adminFetch,
@@ -61,12 +72,12 @@ export const prerender = false;
     const clearButton = document.getElementById("admin-token-clear");
     const feedback = document.getElementById("admin-feedback");
 
-    const setText = (id, value) => {
+    const setText = (id: string, value: unknown) => {
       const el = document.getElementById(id);
       if (el) el.textContent = String(value);
     };
 
-    const setFeedback = (message) => {
+    const setFeedback = (message: string) => {
       if (feedback) feedback.textContent = message;
     };
 

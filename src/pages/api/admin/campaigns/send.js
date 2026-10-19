@@ -1,5 +1,13 @@
-import { adminJson, getAdminRuntimeEnv, requireAdminAuth } from "../../../../lib/admin-auth.js";
-import { cleanString, getSupabaseClient, parseJsonBody } from "../../../../lib/admin-api.js";
+import {
+  adminJson,
+  getAdminRuntimeEnv,
+  requireAdminAuth,
+} from "../../../../lib/admin-auth.js";
+import {
+  cleanString,
+  getSupabaseClient,
+  parseJsonBody,
+} from "../../../../lib/admin-api.js";
 import {
   collectCampaignRecipients,
   normalizeSafeCampaignSegment,
@@ -202,7 +210,7 @@ export const POST = async (context) => {
           p_campaign_id: campaignId,
           p_email: email,
           p_status: ok ? "sent" : "failed",
-          p_error_code: ok ? null : error_code ?? "send_failed",
+          p_error_code: ok ? null : (error_code ?? "send_failed"),
         });
       },
     });
@@ -227,7 +235,10 @@ export const POST = async (context) => {
         recipient_count: recipientEmails.length,
         sent: totals.sent,
         failed: totals.failed,
-        skipped: Math.max(recipientEmails.length - totals.sent - totals.failed, 0),
+        skipped: Math.max(
+          recipientEmails.length - totals.sent - totals.failed,
+          0,
+        ),
       },
       200,
     );

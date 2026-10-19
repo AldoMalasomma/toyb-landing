@@ -10,10 +10,7 @@ const ts = url.searchParams.get("ts")?.trim() ?? "";
 const sig = url.searchParams.get("sig")?.trim() ?? "";
 
 const hasRequiredParams =
-  email.length > 0 &&
-  scope.length > 0 &&
-  ts.length > 0 &&
-  sig.length > 0;
+  email.length > 0 && scope.length > 0 && ts.length > 0 && sig.length > 0;
 
 let state: "success" | "invalid" = "invalid";
 
@@ -33,9 +30,9 @@ if (hasRequiredParams) {
       }),
     });
 
-    const body = (await response.json().catch(() => null)) as
-      | { status?: string }
-      | null;
+    const body = (await response.json().catch(() => null)) as {
+      status?: string;
+    } | null;
 
     if (response.ok && body?.status === "ok") {
       state = "success";
@@ -46,9 +43,7 @@ if (hasRequiredParams) {
 }
 
 const message =
-  state === "success"
-    ? "Sei stato disiscritto"
-    : "Link non valido o scaduto";
+  state === "success" ? "Sei stato disiscritto" : "Link non valido o scaduto";
 ---
 
 <BaseLayout
@@ -60,9 +55,11 @@ const message =
     <div class="section__head">
       <h1>{message}</h1>
       <p>
-        {state === "success"
-          ? "La tua preferenza e stata aggiornata."
-          : "Il link non puo essere usato. Richiedi una nuova email di conferma se necessario."}
+        {
+          state === "success"
+            ? "La tua preferenza e stata aggiornata."
+            : "Il link non puo essere usato. Richiedi una nuova email di conferma se necessario."
+        }
       </p>
     </div>
     <div class="hero-actions" aria-label="Unsubscribe actions">

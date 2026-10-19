@@ -29,10 +29,7 @@ const markdownToHtml = (markdown) => {
     .join("\n");
 };
 
-export const buildCampaignEmailContent = ({
-  bodyMarkdown,
-  unsubscribeUrl,
-}) => {
+export const buildCampaignEmailContent = ({ bodyMarkdown, unsubscribeUrl }) => {
   const bodyText = cleanString(bodyMarkdown);
   const unsubscribeLine = `Unsubscribe from marketing updates: ${unsubscribeUrl}`;
 

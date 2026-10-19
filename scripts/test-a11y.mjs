@@ -12,13 +12,7 @@ const projectRoot = path.resolve(__dirname, "..");
 const distDir = path.join(projectRoot, "dist");
 const port = Number(process.env.A11Y_PORT || 4173);
 
-const routes = [
-  "/",
-  "/privacy",
-  "/accessibility",
-  "/terms",
-  "/imprint",
-];
+const routes = ["/", "/privacy", "/accessibility", "/terms", "/imprint"];
 
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",

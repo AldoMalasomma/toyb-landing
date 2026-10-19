@@ -14,4 +14,7 @@ export function requireAdminAuth(
   env: AdminAuthEnv,
 ): Response | null;
 
-export function adminJson(body: Record<string, unknown>, status: number): Response;
+export function adminJson(
+  body: Record<string, unknown>,
+  status: number,
+): Response;

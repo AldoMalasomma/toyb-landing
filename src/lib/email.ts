@@ -53,9 +53,8 @@ const isValidFromAddress = (value: string): boolean => {
 };
 
 const isProductionRuntime = (): boolean => {
-  const nodeEnv = (
-    globalThis as { process?: { env?: { NODE_ENV?: string } } }
-  ).process?.env?.NODE_ENV;
+  const nodeEnv = (globalThis as { process?: { env?: { NODE_ENV?: string } } })
+    .process?.env?.NODE_ENV;
   return nodeEnv === "production";
 };
 

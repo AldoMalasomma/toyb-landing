@@ -1,4 +1,8 @@
-import { adminJson, getAdminRuntimeEnv, requireAdminAuth } from "../../../lib/admin-auth.js";
+import {
+  adminJson,
+  getAdminRuntimeEnv,
+  requireAdminAuth,
+} from "../../../lib/admin-auth.js";
 import {
   cleanString,
   getSupabaseClient,

@@ -1,4 +1,8 @@
-import { adminJson, getAdminRuntimeEnv, requireAdminAuth } from "../../../lib/admin-auth.js";
+import {
+  adminJson,
+  getAdminRuntimeEnv,
+  requireAdminAuth,
+} from "../../../lib/admin-auth.js";
 import { getSupabaseClient } from "../../../lib/admin-api.js";
 
 export const prerender = false;
@@ -18,7 +22,7 @@ export const GET = async (context) => {
     return adminJson({ status: "error", code: "server_error" }, 500);
   }
 
-  const row = Array.isArray(data) ? data[0] ?? {} : {};
+  const row = Array.isArray(data) ? (data[0] ?? {}) : {};
 
   return adminJson(
     {

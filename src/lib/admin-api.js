@@ -18,7 +18,10 @@ export const parseInteger = (value, fallback, min, max) => {
   return Math.min(Math.max(parsed, min), max);
 };
 
-export const parseBodyWithLimit = async (request, maxBytes = MAX_ADMIN_BODY_BYTES) => {
+export const parseBodyWithLimit = async (
+  request,
+  maxBytes = MAX_ADMIN_BODY_BYTES,
+) => {
   if (!request.body) return "";
 
   const reader = request.body.getReader();
@@ -49,8 +52,13 @@ export const parseBodyWithLimit = async (request, maxBytes = MAX_ADMIN_BODY_BYTE
   return new TextDecoder().decode(merged);
 };
 
-export const parseJsonBody = async (request, maxBytes = MAX_ADMIN_BODY_BYTES) => {
-  const contentType = cleanString(request.headers.get("content-type")).toLowerCase();
+export const parseJsonBody = async (
+  request,
+  maxBytes = MAX_ADMIN_BODY_BYTES,
+) => {
+  const contentType = cleanString(
+    request.headers.get("content-type"),
+  ).toLowerCase();
   if (!contentType.startsWith("application/json")) {
     return { ok: false, code: "invalid_request", status: 415 };
   }

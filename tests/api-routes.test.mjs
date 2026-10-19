@@ -2,9 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { handleUnsubscribeRequest } from "../src/lib/unsubscribe-service.js";
 import { handleWaitlistSubmission } from "../src/lib/waitlist-service.js";
-import {
-  upsertWaitlistWithCompatibility,
-} from "../src/lib/waitlist-supabase.js";
+import { upsertWaitlistWithCompatibility } from "../src/lib/waitlist-supabase.js";
 
 const baseEnv = {
   WAITLIST_ALLOWED_ORIGINS: "https://toyb.space",

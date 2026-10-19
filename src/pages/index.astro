@@ -71,7 +71,8 @@ const legacyCopy = {
   preview: {
     subtitle:
       "Toyb turns characters, plots, factions, timelines, and worlds into a living relational system — not a folder tree.",
-    summaryLead: "See your universe as a structured network — not scattered notes.",
+    summaryLead:
+      "See your universe as a structured network — not scattered notes.",
     summaryLine1: "Characters link to plots.",
     summaryLine2: "Events sit on timelines.",
     summaryLine3: "Factions shape arcs.",
@@ -95,8 +96,7 @@ const uiCopy = {
     "Toyb replaces folder-based worldbuilding workflows with a system-oriented workspace.",
     "Kickstarter launch planned for next month. Early access includes launch notification and early backer rewards.",
   ],
-  founderNote:
-    "Built by a solo founder focused on narrative systems.",
+  founderNote: "Built by a solo founder focused on narrative systems.",
   whatIs: [
     "Toyb is a narrative systems platform for managing projects as connected data, not scattered files.",
     "Track relationships across characters, events, factions, plots, and locations in one operational model.",
@@ -175,49 +175,52 @@ const workspaceImageSizes =
 const transparentPixel =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
-const previewSlides = await Promise.all([
-  {
-    stage: "structure",
-    label: "Narrative Graph",
-    asset: graphPreviewPng,
-    src: "/images/landing/1920x1080/02-graph-narrative-no-context-menu.png",
-    srcWebp: "/images/landing/1920x1080/02-graph-narrative-no-context-menu.webp",
-    alt: "Narrative Graph view showing connections between story entities.",
-  },
-  {
-    stage: "time",
-    label: "Timeline",
-    asset: timelinePreviewPng,
-    src: "/images/landing/1920x1080/03-timeline-cinematica.png",
-    srcWebp: "/images/landing/1920x1080/03-timeline-cinematica.webp",
-    alt: "Timeline view mapping events and sequence across the narrative.",
-  },
-  {
-    stage: "analysis",
-    label: "AI Insights",
-    asset: aiInsightsPreviewPng,
-    src: "/images/landing/1920x1080/07-ai-insights-panel.png",
-    srcWebp: "/images/landing/1920x1080/07-ai-insights-panel.webp",
-    alt: "AI Insights panel surfacing narrative issues and recommendations.",
-  },
-  {
-    stage: "integrity",
-    label: "Project Health",
-    asset: projectHealthPreviewPng,
-    src: "/images/landing/1920x1080/08-project-health.png",
-    srcWebp: "/images/landing/1920x1080/08-project-health.webp",
-    alt: "Project Health view validating consistency across the system.",
-  },
-].map(async (slide) => ({
-  ...slide,
-  previewImage: await getImage({
-    src: slide.asset,
-    widths: [360, 532, 800, 1064],
-    sizes: previewImageSizes,
-    format: "webp",
-    quality: "mid",
-  }),
-})));
+const previewSlides = await Promise.all(
+  [
+    {
+      stage: "structure",
+      label: "Narrative Graph",
+      asset: graphPreviewPng,
+      src: "/images/landing/1920x1080/02-graph-narrative-no-context-menu.png",
+      srcWebp:
+        "/images/landing/1920x1080/02-graph-narrative-no-context-menu.webp",
+      alt: "Narrative Graph view showing connections between story entities.",
+    },
+    {
+      stage: "time",
+      label: "Timeline",
+      asset: timelinePreviewPng,
+      src: "/images/landing/1920x1080/03-timeline-cinematica.png",
+      srcWebp: "/images/landing/1920x1080/03-timeline-cinematica.webp",
+      alt: "Timeline view mapping events and sequence across the narrative.",
+    },
+    {
+      stage: "analysis",
+      label: "AI Insights",
+      asset: aiInsightsPreviewPng,
+      src: "/images/landing/1920x1080/07-ai-insights-panel.png",
+      srcWebp: "/images/landing/1920x1080/07-ai-insights-panel.webp",
+      alt: "AI Insights panel surfacing narrative issues and recommendations.",
+    },
+    {
+      stage: "integrity",
+      label: "Project Health",
+      asset: projectHealthPreviewPng,
+      src: "/images/landing/1920x1080/08-project-health.png",
+      srcWebp: "/images/landing/1920x1080/08-project-health.webp",
+      alt: "Project Health view validating consistency across the system.",
+    },
+  ].map(async (slide) => ({
+    ...slide,
+    previewImage: await getImage({
+      src: slide.asset,
+      widths: [360, 532, 800, 1064],
+      sizes: previewImageSizes,
+      format: "webp",
+      quality: "mid",
+    }),
+  })),
+);
 
 const workspaceOverview = {
   asset: workspaceOverviewPng,
@@ -364,11 +367,7 @@ const workspaceOverview = {
     <p class="waitlist__feedback" aria-live="polite" data-waitlist-feedback></p>
   </section>
 
-  <Section
-    id="why-toyb"
-    title="Why Toyb"
-    subtitle={copy.why.subtitle}
-  >
+  <Section id="why-toyb" title="Why Toyb" subtitle={copy.why.subtitle}>
     <FeatureGrid items={whyItems} />
   </Section>
 
@@ -417,7 +416,9 @@ const workspaceOverview = {
                     data-preview-src={slide.src}
                     data-preview-src-webp={slide.srcWebp}
                     data-preview-image-src={slide.previewImage.src}
-                    data-preview-image-srcset={slide.previewImage.srcSet.attribute}
+                    data-preview-image-srcset={
+                      slide.previewImage.srcSet.attribute
+                    }
                     data-preview-caption={`${slide.label} · ${slide.stage}`}
                     aria-hidden={index === 0 ? "false" : "true"}
                   >
@@ -437,7 +438,11 @@ const workspaceOverview = {
                             ? slide.previewImage.src
                             : transparentPixel
                         }
-                        srcset={index === 0 ? slide.previewImage.srcSet.attribute : undefined}
+                        srcset={
+                          index === 0
+                            ? slide.previewImage.srcSet.attribute
+                            : undefined
+                        }
                         sizes={previewImageSizes}
                         width={slide.previewImage.attributes.width}
                         height={slide.previewImage.attributes.height}
@@ -457,7 +462,10 @@ const workspaceOverview = {
             </div>
           </div>
 
-          <div class="preview-carousel__controls" aria-label="Engine preview controls">
+          <div
+            class="preview-carousel__controls"
+            aria-label="Engine preview controls"
+          >
             <button
               type="button"
               class="preview-carousel__arrow"
@@ -466,7 +474,11 @@ const workspaceOverview = {
             >
               <span aria-hidden="true">&larr;</span>
             </button>
-            <div class="preview-carousel__dots" role="tablist" aria-label="Choose slide">
+            <div
+              class="preview-carousel__dots"
+              role="tablist"
+              aria-label="Choose slide"
+            >
               {
                 previewSlides.map((slide, index) => (
                   <button
@@ -518,7 +530,12 @@ const workspaceOverview = {
       </div>
     </article>
 
-    <div class="preview-lightbox" data-preview-lightbox hidden aria-hidden="true">
+    <div
+      class="preview-lightbox"
+      data-preview-lightbox
+      hidden
+      aria-hidden="true"
+    >
       <div class="preview-lightbox__scrim" data-preview-close></div>
       <div
         class="preview-lightbox__dialog"
@@ -546,11 +563,7 @@ const workspaceOverview = {
 
         <figure class="preview-lightbox__figure">
           <picture class="preview-lightbox__picture">
-              <source
-              type="image/webp"
-              data-preview-lightbox-source
-              srcset=""
-            />
+            <source type="image/webp" data-preview-lightbox-source srcset="" />
             <img
               class="preview-lightbox__image"
               data-preview-lightbox-image
@@ -661,7 +674,12 @@ const workspaceOverview = {
   -->
   <!-- Founder section previous layout end -->
 
-  <section id="founder" class="section founder-origin" aria-labelledby="founder-title" data-reveal>
+  <section
+    id="founder"
+    class="section founder-origin"
+    aria-labelledby="founder-title"
+    data-reveal
+  >
     <header class="founder-origin__head">
       <h2 id="founder-title">Built by a solo founder</h2>
     </header>
@@ -700,8 +718,7 @@ const workspaceOverview = {
           <a
             href="https://www.linkedin.com/in/aldo-g-malasomma/"
             target="_blank"
-            rel="noopener noreferrer"
-            >LinkedIn</a
+            rel="noopener noreferrer">LinkedIn</a
           >
         </p>
       </div>
@@ -783,7 +800,11 @@ const workspaceOverview = {
   </style>
 
   <script>
-    const track = (_event: string, _payload?: Record<string, unknown>) => {};
+    const track = (...args: [string, Record<string, unknown>?]) => {
+      void args;
+    };
+    const previewImageSizes =
+      "(max-width: 47.99rem) calc(100vw - 3.3rem), (max-width: 72rem) calc(100vw - 8rem), 532px";
 
     const form = document.querySelector("[data-waitlist-form]");
     const feedback = document.querySelector("[data-waitlist-feedback]");
@@ -794,8 +815,9 @@ const workspaceOverview = {
 
         const emailField = form.elements.namedItem("email");
         const companyField = form.elements.namedItem("company");
-        const agePrivacyField =
-          form.elements.namedItem("age_privacy_confirmed");
+        const agePrivacyField = form.elements.namedItem(
+          "age_privacy_confirmed",
+        );
         const marketingConsentField =
           form.elements.namedItem("marketing_consent");
         const turnstileField = form.querySelector(
@@ -938,7 +960,9 @@ const workspaceOverview = {
       }
 
       const trackEl = previewCarousel.querySelector("[data-preview-track]");
-      const viewportEl = previewCarousel.querySelector("[data-preview-viewport]");
+      const viewportEl = previewCarousel.querySelector(
+        "[data-preview-viewport]",
+      );
       const slides = Array.from(
         previewCarousel.querySelectorAll("[data-preview-slide]"),
       );
@@ -1004,14 +1028,17 @@ const workspaceOverview = {
         if (workspaceOpenButton instanceof HTMLButtonElement) {
           const workspaceImage = workspaceOpenButton.querySelector("img");
           if (workspaceImage instanceof HTMLImageElement) {
-            workspaceLightboxIndex = lightboxItems.push({
-              src: workspaceOpenButton.dataset.workspaceSrc ?? workspaceImage.src,
-              srcWebp: workspaceOpenButton.dataset.workspaceSrcWebp ?? "",
-              alt: workspaceImage.alt,
-              caption:
-                workspaceOpenButton.dataset.workspaceCaption ??
-                workspaceImage.alt,
-            }) - 1;
+            workspaceLightboxIndex =
+              lightboxItems.push({
+                src:
+                  workspaceOpenButton.dataset.workspaceSrc ??
+                  workspaceImage.src,
+                srcWebp: workspaceOpenButton.dataset.workspaceSrcWebp ?? "",
+                alt: workspaceImage.alt,
+                caption:
+                  workspaceOpenButton.dataset.workspaceCaption ??
+                  workspaceImage.alt,
+              }) - 1;
           }
         }
 

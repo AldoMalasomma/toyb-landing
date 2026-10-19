@@ -360,4 +360,3 @@ Change policy:
 - Mobile and desktop layouts validated.
 - Reduced-motion behavior respected.
 - Accessibility landmarks and labels preserved.
-

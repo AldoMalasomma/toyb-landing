@@ -21,19 +21,19 @@ npm run dev
 
 ## Commands
 
-| Command             | Purpose                                   |
-| ------------------- | ----------------------------------------- |
-| `npm run dev`       | Start local development server            |
-| `npm run lint`      | Run ESLint                                |
-| `npm run format`    | Check formatting (fails if not compliant) |
-| `npm run typecheck` | Run TypeScript typecheck                  |
-| `npm run check`     | Run typecheck + `astro check`             |
-| `npm run build`     | Build static output into `dist/`          |
-| `npm run test`       | Run backend tests (token + API)           |
+| Command                 | Purpose                                     |
+| ----------------------- | ------------------------------------------- |
+| `npm run dev`           | Start local development server              |
+| `npm run lint`          | Run ESLint                                  |
+| `npm run format`        | Check formatting (fails if not compliant)   |
+| `npm run typecheck`     | Run TypeScript typecheck                    |
+| `npm run check`         | Run typecheck + `astro check`               |
+| `npm run build`         | Build static output into `dist/`            |
+| `npm run test`          | Run backend tests (token + API)             |
 | `npm run test:waitlist` | Run waitlist smoke script (server required) |
-| `npm run test:email` | Call protected `/api/waitlist-test`       |
-| `npm run test:a11y` | Run axe-core checks on built pages        |
-| `npm run deploy`    | One-command Cloudflare Pages deploy       |
+| `npm run test:email`    | Call protected `/api/waitlist-test`         |
+| `npm run test:a11y`     | Run axe-core checks on built pages          |
+| `npm run deploy`        | One-command Cloudflare Pages deploy         |
 
 ## Waitlist backend
 

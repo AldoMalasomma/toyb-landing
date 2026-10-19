@@ -35,15 +35,14 @@ Results in this staging copy:
 
 - automated tests: **pass** — 4 test files, 4 tests passed;
 - production build: **pass** — Astro/Cloudflare build completed;
-- lint: **fails** — 7 existing findings, including `@ts-nocheck`, unused
-  parameters and `prefer-rest-params`;
-- formatting: **fails** — Prettier reports 43 files needing formatting;
-- typecheck: **fails** — 3 `ImportMeta.env` typing errors in API routes;
+- lint: **pass**;
+- formatting: **pass**;
+- typecheck and `astro check`: **pass** — 0 errors, 0 warnings, 0 hints;
 - accessibility test: **not completed** — the managed execution environment
   denied binding the local test server to `127.0.0.1:4173` (`EPERM`).
 
-The failures are recorded as repository debt and were not silently fixed in
-the staging copy.
+The remaining accessibility check requires an environment that permits a local
+HTTP server.
 
 ## Visibility decision
 

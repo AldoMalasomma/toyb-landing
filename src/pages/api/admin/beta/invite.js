@@ -1,4 +1,8 @@
-import { adminJson, getAdminRuntimeEnv, requireAdminAuth } from "../../../../lib/admin-auth.js";
+import {
+  adminJson,
+  getAdminRuntimeEnv,
+  requireAdminAuth,
+} from "../../../../lib/admin-auth.js";
 import {
   cleanString,
   getSupabaseClient,
@@ -43,9 +47,12 @@ export const POST = async (context) => {
   const emails = parseEmailList(body.emails);
 
   if (emails.length > 0) {
-    const { data, error } = await supabase.rpc("waitlist_admin_invite_beta_emails", {
-      p_emails: emails,
-    });
+    const { data, error } = await supabase.rpc(
+      "waitlist_admin_invite_beta_emails",
+      {
+        p_emails: emails,
+      },
+    );
 
     if (error) {
       return adminJson({ status: "error", code: "server_error" }, 500);
@@ -75,14 +82,17 @@ export const POST = async (context) => {
   const from = parseNullableDate(filter.from);
   const to = parseNullableDate(filter.to);
 
-  const { data, error } = await supabase.rpc("waitlist_admin_invite_beta_segment", {
-    p_marketing: marketing,
-    p_source: source,
-    p_subscribed_only: subscribedOnly,
-    p_beta: beta,
-    p_from: from,
-    p_to: to,
-  });
+  const { data, error } = await supabase.rpc(
+    "waitlist_admin_invite_beta_segment",
+    {
+      p_marketing: marketing,
+      p_source: source,
+      p_subscribed_only: subscribedOnly,
+      p_beta: beta,
+      p_from: from,
+      p_to: to,
+    },
+  );
 
   if (error) {
     return adminJson({ status: "error", code: "invalid_request" }, 400);

@@ -16,9 +16,7 @@ import Section from "../components/Section.astro";
     data-origin-section="hero"
   >
     <p class="origin-kicker">Origin</p>
-    <h1 id="origin-hero-title" class="hero-title">
-      The Quantum Syndicate
-    </h1>
+    <h1 id="origin-hero-title" class="hero-title">The Quantum Syndicate</h1>
     <p class="hero-subtitle">
       The science-fiction narrative universe that made Toyb necessary.
     </p>
@@ -30,9 +28,9 @@ import Section from "../components/Section.astro";
       </p>
       <p>
         During the construction of The Quantum Syndicate, a complex narrative
-        universe shaped by timelines, factions, technologies, memory, and
-        causal links, one problem became clear: traditional tools were no
-        longer enough.
+        universe shaped by timelines, factions, technologies, memory, and causal
+        links, one problem became clear: traditional tools were no longer
+        enough.
       </p>
     </div>
     <p class="origin-hero__note">
@@ -95,8 +93,8 @@ import Section from "../components/Section.astro";
     <div class="origin-grid" data-origin-section="problem">
       <article class="origin-panel origin-panel--problem-copy">
         <p>
-          The Quantum Syndicate was never just a collection of notes.
-          It was a connected system.
+          The Quantum Syndicate was never just a collection of notes. It was a
+          connected system.
         </p>
         <p>
           As the project expanded, the difficulty was no longer simply writing
@@ -125,8 +123,8 @@ import Section from "../components/Section.astro";
             to another.
           </li>
           <li>
-            Technologies changed the political, identity, and historical
-            context of the world.
+            Technologies changed the political, identity, and historical context
+            of the world.
           </li>
         </ul>
       </aside>
@@ -140,12 +138,10 @@ import Section from "../components/Section.astro";
   >
     <div class="origin-split" data-origin-section="system-design">
       <article class="origin-panel origin-panel--system-design-copy">
+        <p>At a certain point, the bottleneck became obvious.</p>
         <p>
-          At a certain point, the bottleneck became obvious.
-        </p>
-        <p>
-          The problem was not a lack of imagination.
-          It was the absence of operational control.
+          The problem was not a lack of imagination. It was the absence of
+          operational control.
         </p>
       </article>
 
@@ -170,9 +166,7 @@ import Section from "../components/Section.astro";
     </div>
 
     <div class="origin-bridge">
-      <p>
-        Toyb emerged from that need.
-      </p>
+      <p>Toyb emerged from that need.</p>
       <p>
         It was designed to make complex narrative systems legible, navigable,
         and manageable over time.
@@ -185,7 +179,10 @@ import Section from "../components/Section.astro";
     title="Why this matters"
     subtitle="Toyb was built for creators dealing with systems that exceed note-taking."
   >
-    <div class="origin-panel origin-panel--why-it-matters" data-origin-section="why-it-matters">
+    <div
+      class="origin-panel origin-panel--why-it-matters"
+      data-origin-section="why-it-matters"
+    >
       <div class="origin-why-it-matters__copy">
         <p>
           Toyb exists for creators working on projects that exceed note-taking.
@@ -228,9 +225,7 @@ import Section from "../components/Section.astro";
     <div class="origin-cta__inner">
       <div class="origin-cta__copy">
         <h2 id="origin-cta-title">Built from a real narrative challenge.</h2>
-        <p>
-          Toyb began with one world.
-        </p>
+        <p>Toyb began with one world.</p>
         <p>
           It was built for creators who need structure, continuity, and control
           as their projects grow in complexity.
@@ -248,7 +243,11 @@ import Section from "../components/Section.astro";
         >
           Get early access
         </a>
-        <a class="button" href="/#preview" data-track="cta_origin_footer_preview">
+        <a
+          class="button"
+          href="/#preview"
+          data-track="cta_origin_footer_preview"
+        >
           Jump to preview
         </a>
       </div>
@@ -505,7 +504,9 @@ import Section from "../components/Section.astro";
         (entries, observer) => {
           entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
-            const sectionName = entry.target.getAttribute("data-origin-section");
+            const sectionName = entry.target.getAttribute(
+              "data-origin-section",
+            );
             if (!sectionName || trackedSections.has(sectionName)) return;
             trackedSections.add(sectionName);
             track("origin_section_view", {

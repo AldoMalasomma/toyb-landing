@@ -34,7 +34,9 @@ const parsePrivacyVersion = (value) => {
 };
 
 const isValidEmail = (email) =>
-  email.length > 0 && email.length <= MAX_EMAIL_LENGTH && EMAIL_PATTERN.test(email);
+  email.length > 0 &&
+  email.length <= MAX_EMAIL_LENGTH &&
+  EMAIL_PATTERN.test(email);
 
 const parseAllowedOrigins = (value) => {
   const candidates = cleanString(value)
@@ -42,7 +44,8 @@ const parseAllowedOrigins = (value) => {
     .map((entry) => entry.trim())
     .filter(Boolean);
 
-  const normalized = candidates.length > 0 ? candidates : DEFAULT_ALLOWED_ORIGINS;
+  const normalized =
+    candidates.length > 0 ? candidates : DEFAULT_ALLOWED_ORIGINS;
   const out = new Set();
 
   for (const origin of normalized) {
@@ -210,7 +213,8 @@ export async function handleWaitlistSubmission({
 
   const unsubscribeSecret = cleanString(env.WAITLIST_UNSUBSCRIBE_SECRET);
   const unsubscribeBaseUrl =
-    cleanString(env.WAITLIST_UNSUBSCRIBE_BASE_URL) || cleanString(requestMeta.requestUrl);
+    cleanString(env.WAITLIST_UNSUBSCRIBE_BASE_URL) ||
+    cleanString(requestMeta.requestUrl);
 
   let emailSent = false;
   let emailErrorCode;

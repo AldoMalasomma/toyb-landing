@@ -39,9 +39,8 @@ const parseAllowedOrigins = (value) => {
     .map((entry) => entry.trim())
     .filter(Boolean);
 
-  const normalized = candidates.length > 0
-    ? candidates
-    : DEFAULT_ADMIN_ALLOWED_ORIGINS;
+  const normalized =
+    candidates.length > 0 ? candidates : DEFAULT_ADMIN_ALLOWED_ORIGINS;
   const out = new Set();
 
   for (const origin of normalized) {

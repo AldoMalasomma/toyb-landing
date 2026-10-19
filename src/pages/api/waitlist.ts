@@ -1,9 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { APIContext, APIRoute } from "astro";
-import {
-  sendWaitlistEmail,
-  type WaitlistEmailEnv,
-} from "../../lib/email";
+import { sendWaitlistEmail, type WaitlistEmailEnv } from "../../lib/email";
 import { handleWaitlistSubmission } from "../../lib/waitlist-service.js";
 import { upsertWaitlistWithCompatibility } from "../../lib/waitlist-supabase.js";
 
@@ -46,7 +43,8 @@ const parseAllowedOrigins = (value: string): Set<string> => {
     .map((entry) => entry.trim())
     .filter(Boolean);
 
-  const normalized = candidates.length > 0 ? candidates : DEFAULT_ALLOWED_ORIGINS;
+  const normalized =
+    candidates.length > 0 ? candidates : DEFAULT_ALLOWED_ORIGINS;
   const out = new Set<string>();
 
   for (const origin of normalized) {
@@ -60,7 +58,10 @@ const parseAllowedOrigins = (value: string): Set<string> => {
   return out;
 };
 
-const getAllowedOrigin = (origin: string, allowedOrigins: Set<string>): string | null => {
+const getAllowedOrigin = (
+  origin: string,
+  allowedOrigins: Set<string>,
+): string | null => {
   if (!origin) return null;
   try {
     const parsed = new URL(origin).origin;
@@ -174,7 +175,8 @@ export const OPTIONS: APIRoute = async (context) => {
 };
 
 export const ALL: APIRoute = async (context) => {
-  const allowedOrigin = cleanString(context.request.headers.get("origin")) || undefined;
+  const allowedOrigin =
+    cleanString(context.request.headers.get("origin")) || undefined;
   return json({ status: "error", code: "invalid_request" }, 405, allowedOrigin);
 };
 
@@ -214,11 +216,20 @@ export const POST: APIRoute = async (context) => {
   });
 
   const rateLimitStore =
-    (globalThis as { __toybWaitlistRateStore?: Map<string, { count: number; resetAt: number }> })
-      .__toybWaitlistRateStore ??
+    (
+      globalThis as {
+        __toybWaitlistRateStore?: Map<
+          string,
+          { count: number; resetAt: number }
+        >;
+      }
+    ).__toybWaitlistRateStore ??
     new Map<string, { count: number; resetAt: number }>();
-  (globalThis as { __toybWaitlistRateStore?: Map<string, { count: number; resetAt: number }> })
-    .__toybWaitlistRateStore = rateLimitStore;
+  (
+    globalThis as {
+      __toybWaitlistRateStore?: Map<string, { count: number; resetAt: number }>;
+    }
+  ).__toybWaitlistRateStore = rateLimitStore;
 
   const result = await handleWaitlistSubmission({
     payload,
@@ -253,9 +264,5 @@ export const POST: APIRoute = async (context) => {
     },
   });
 
-  return json(
-    result.body,
-    result.status,
-    result.origin ?? undefined,
-  );
+  return json(result.body, result.status, result.origin ?? undefined);
 };

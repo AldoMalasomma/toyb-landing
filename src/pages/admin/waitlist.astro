@@ -23,7 +23,8 @@ export const prerender = false;
       <button class="button button-primary" id="admin-token-save" type="button">
         Authenticate
       </button>
-      <button class="button" id="admin-token-clear" type="button">Logout</button>
+      <button class="button" id="admin-token-clear" type="button">Logout</button
+      >
     </div>
 
     <form id="waitlist-filters" class="filters" autocomplete="off">
@@ -83,7 +84,6 @@ export const prerender = false;
   </section>
 
   <script>
-    // @ts-nocheck
     import { track } from "../../lib/analytics";
     import {
       adminFetch,
@@ -106,11 +106,21 @@ export const prerender = false;
     const limit = 25;
     let totalCount = 0;
 
-    const setFeedback = (message) => {
+    const setFeedback = (message: string) => {
       if (feedback) feedback.textContent = message;
     };
 
-    const rowMarkup = (row) => {
+    type WaitlistRow = {
+      email: string;
+      beta_invited_at: string | null;
+      unsubscribed_at: string | null;
+      marketing_consent: boolean;
+      created_at: string;
+      source: string | null;
+      beta_active: boolean;
+    };
+
+    const rowMarkup = (row: WaitlistRow) => {
       const invited = row.beta_invited_at ? "yes" : "no";
       const unsubscribed = row.unsubscribed_at ? "yes" : "no";
       const marketing = row.marketing_consent ? "yes" : "no";
@@ -142,7 +152,8 @@ export const prerender = false;
     };
 
     const getQuery = () => {
-      if (!(filtersForm instanceof HTMLFormElement)) return new URLSearchParams();
+      if (!(filtersForm instanceof HTMLFormElement))
+        return new URLSearchParams();
       const form = new FormData(filtersForm);
       const query = new URLSearchParams();
       const marketing = (form.get("marketing") ?? "").toString();
@@ -163,14 +174,17 @@ export const prerender = false;
       const page = Math.floor(offset / limit) + 1;
       const pages = Math.max(Math.ceil(totalCount / limit), 1);
       if (pagerInfo) pagerInfo.textContent = `Page ${page} / ${pages}`;
-      if (prevPage instanceof HTMLButtonElement) prevPage.disabled = offset <= 0;
+      if (prevPage instanceof HTMLButtonElement)
+        prevPage.disabled = offset <= 0;
       if (nextPage instanceof HTMLButtonElement)
         nextPage.disabled = offset + limit >= totalCount;
     };
 
     const loadRows = async () => {
       const query = getQuery();
-      const { response, body } = await adminFetch(`/api/admin/waitlist?${query.toString()}`);
+      const { response, body } = await adminFetch(
+        `/api/admin/waitlist?${query.toString()}`,
+      );
 
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
@@ -186,13 +200,15 @@ export const prerender = false;
       totalCount = Number(body?.total_count ?? 0);
 
       if (bodyEl) {
-        bodyEl.innerHTML = rows.map((row) => rowMarkup(row)).join("");
+        bodyEl.innerHTML = rows
+          .map((row: WaitlistRow) => rowMarkup(row))
+          .join("");
       }
       renderPager();
       setFeedback(`Loaded ${rows.length} rows.`);
     };
 
-    const inviteEmail = async (email) => {
+    const inviteEmail = async (email: string) => {
       const { response } = await adminFetch("/api/admin/beta/invite", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -208,7 +224,7 @@ export const prerender = false;
       loadRows();
     };
 
-    const setActive = async (email, active) => {
+    const setActive = async (email: string, active: boolean) => {
       const { response } = await adminFetch("/api/admin/beta/set-active", {
         method: "POST",
         headers: { "content-type": "application/json" },

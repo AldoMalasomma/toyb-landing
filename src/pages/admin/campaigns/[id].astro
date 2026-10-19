@@ -28,7 +28,8 @@ const campaignId = Astro.params.id ?? "";
       <button class="button button-primary" id="admin-token-save" type="button">
         Authenticate
       </button>
-      <button class="button" id="admin-token-clear" type="button">Logout</button>
+      <button class="button" id="admin-token-clear" type="button">Logout</button
+      >
     </div>
 
     <p class="admin-feedback" id="admin-feedback" aria-live="polite"></p>
@@ -62,7 +63,6 @@ const campaignId = Astro.params.id ?? "";
   </section>
 
   <script>
-    // @ts-nocheck
     import {
       adminFetch,
       clearAdminToken,
@@ -90,7 +90,7 @@ const campaignId = Astro.params.id ?? "";
     const limit = 100;
     let totalCount = 0;
 
-    const setFeedback = (message) => {
+    const setFeedback = (message: string) => {
       if (feedback) feedback.textContent = message;
     };
 
@@ -98,13 +98,16 @@ const campaignId = Astro.params.id ?? "";
       const page = Math.floor(offset / limit) + 1;
       const pages = Math.max(Math.ceil(totalCount / limit), 1);
       if (pagerInfo) pagerInfo.textContent = `Page ${page} / ${pages}`;
-      if (prevPage instanceof HTMLButtonElement) prevPage.disabled = offset <= 0;
+      if (prevPage instanceof HTMLButtonElement)
+        prevPage.disabled = offset <= 0;
       if (nextPage instanceof HTMLButtonElement)
         nextPage.disabled = offset + limit >= totalCount;
     };
 
     const loadCampaign = async () => {
-      const { response, body } = await adminFetch(`/api/admin/campaigns/${campaignId}`);
+      const { response, body } = await adminFetch(
+        `/api/admin/campaigns/${campaignId}`,
+      );
       if (!response.ok) {
         setFeedback("Unable to load campaign detail.");
         return false;
@@ -136,7 +139,12 @@ const campaignId = Astro.params.id ?? "";
       if (bodyEl) {
         bodyEl.innerHTML = rows
           .map(
-            (row) => `
+            (row: {
+              email: string;
+              status: string;
+              sent_at: string | null;
+              error_code: string | null;
+            }) => `
               <tr>
                 <td>${row.email}</td>
                 <td>${row.status}</td>

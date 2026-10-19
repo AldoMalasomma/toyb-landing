@@ -23,7 +23,8 @@ export const prerender = false;
       <button class="button button-primary" id="admin-token-save" type="button">
         Authenticate
       </button>
-      <button class="button" id="admin-token-clear" type="button">Logout</button>
+      <button class="button" id="admin-token-clear" type="button">Logout</button
+      >
     </div>
 
     <form id="campaign-form" class="campaign-form" autocomplete="off">
@@ -69,7 +70,9 @@ export const prerender = false;
       </fieldset>
 
       <div class="hero-actions">
-        <button class="button" id="preview-button" type="button">Preview recipients</button>
+        <button class="button" id="preview-button" type="button"
+          >Preview recipients</button
+        >
         <button class="button button-primary" id="send-button" type="submit">
           Send campaign
         </button>
@@ -98,7 +101,6 @@ export const prerender = false;
   </section>
 
   <script>
-    // @ts-nocheck
     import { track } from "../../../lib/analytics";
     import {
       adminFetch,
@@ -119,7 +121,7 @@ export const prerender = false;
     const sendLink = document.getElementById("send-link");
     const sendConfirm = document.getElementById("send-confirm");
 
-    const setFeedback = (message) => {
+    const setFeedback = (message: string) => {
       if (feedback) feedback.textContent = message;
     };
 
@@ -144,11 +146,14 @@ export const prerender = false;
       const payload = getPayload();
       if (!payload) return;
 
-      const { response, body } = await adminFetch("/api/admin/campaigns/preview", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ segment: payload.segment }),
-      });
+      const { response, body } = await adminFetch(
+        "/api/admin/campaigns/preview",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ segment: payload.segment }),
+        },
+      );
 
       if (!response.ok) {
         setFeedback("Preview failed.");
@@ -156,10 +161,13 @@ export const prerender = false;
       }
 
       const count = Number(body?.recipient_count ?? 0);
-      const sample = Array.isArray(body?.sample_emails) ? body.sample_emails : [];
+      const sample = Array.isArray(body?.sample_emails)
+        ? body.sample_emails
+        : [];
       if (previewCount) previewCount.textContent = `Recipient count: ${count}`;
       if (previewSample)
-        previewSample.textContent = sample.length > 0 ? sample.join("\n") : "No recipients.";
+        previewSample.textContent =
+          sample.length > 0 ? sample.join("\n") : "No recipients.";
       setFeedback("Preview ready.");
 
       track("admin_campaign_preview", {
@@ -177,7 +185,10 @@ export const prerender = false;
         return;
       }
 
-      if (!(sendConfirm instanceof HTMLInputElement) || sendConfirm.value.trim() !== "SEND") {
+      if (
+        !(sendConfirm instanceof HTMLInputElement) ||
+        sendConfirm.value.trim() !== "SEND"
+      ) {
         setFeedback("Type SEND to confirm campaign delivery.");
         return;
       }

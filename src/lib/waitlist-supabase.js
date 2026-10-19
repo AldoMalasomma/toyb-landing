@@ -2,9 +2,10 @@ const cleanString = (value) => (typeof value === "string" ? value.trim() : "");
 
 const isPostgrestFunctionResolutionError = (error, functionName) => {
   const code = cleanString(error?.code);
-  const message = `${cleanString(error?.message)} ${cleanString(error?.details)} ${cleanString(
-    error?.hint,
-  )}`.toLowerCase();
+  const message =
+    `${cleanString(error?.message)} ${cleanString(error?.details)} ${cleanString(
+      error?.hint,
+    )}`.toLowerCase();
   const fnName = functionName.toLowerCase();
 
   if (code === "PGRST202" || code === "42883") {

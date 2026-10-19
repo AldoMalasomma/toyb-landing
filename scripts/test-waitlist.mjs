@@ -2,7 +2,8 @@ import { signUnsubscribeToken } from "../src/lib/unsubscribe-token.js";
 
 const BASE_URL = process.env.BASE_URL ?? "http://localhost:4321";
 const ORIGIN = process.env.WAITLIST_TEST_ORIGIN ?? "https://toyb.space";
-const PRIVACY_VERSION = process.env.WAITLIST_TEST_PRIVACY_VERSION ?? "2026-02-25";
+const PRIVACY_VERSION =
+  process.env.WAITLIST_TEST_PRIVACY_VERSION ?? "2026-02-25";
 const UNSUBSCRIBE_SECRET =
   process.env.WAITLIST_UNSUBSCRIBE_SECRET ?? "test-unsubscribe-secret";
 

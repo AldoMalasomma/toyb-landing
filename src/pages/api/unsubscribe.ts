@@ -20,10 +20,7 @@ const toParamString = (value: unknown): string => {
   return "";
 };
 
-const json = (
-  body: Record<string, unknown>,
-  status: number,
-): Response =>
+const json = (body: Record<string, unknown>, status: number): Response =>
   new Response(JSON.stringify(body), {
     status,
     headers: {
@@ -111,11 +108,23 @@ const runUnsubscribe = async (
   });
 
   const invalidAttemptStore =
-    (globalThis as { __toybUnsubscribeRateStore?: Map<string, { count: number; resetAt: number }> })
-      .__toybUnsubscribeRateStore ??
+    (
+      globalThis as {
+        __toybUnsubscribeRateStore?: Map<
+          string,
+          { count: number; resetAt: number }
+        >;
+      }
+    ).__toybUnsubscribeRateStore ??
     new Map<string, { count: number; resetAt: number }>();
-  (globalThis as { __toybUnsubscribeRateStore?: Map<string, { count: number; resetAt: number }> })
-    .__toybUnsubscribeRateStore = invalidAttemptStore;
+  (
+    globalThis as {
+      __toybUnsubscribeRateStore?: Map<
+        string,
+        { count: number; resetAt: number }
+      >;
+    }
+  ).__toybUnsubscribeRateStore = invalidAttemptStore;
 
   const result = await handleUnsubscribeRequest({
     query: payload,
@@ -164,7 +173,12 @@ export const POST: APIRoute = async (context) => {
     return json({ status: "error", error: "invalid_signature" }, 400);
   }
 
-  let payload: { email?: unknown; scope?: unknown; ts?: unknown; sig?: unknown };
+  let payload: {
+    email?: unknown;
+    scope?: unknown;
+    ts?: unknown;
+    sig?: unknown;
+  };
   try {
     payload = JSON.parse(bodyText) as {
       email?: unknown;

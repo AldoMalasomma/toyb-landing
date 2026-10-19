@@ -10,6 +10,7 @@ const { policyHref = "/privacy", analyticsId = "G-6ZD3YD2STD" } = Astro.props;
 <aside
   class="consent-banner"
   data-consent-banner
+  data-analytics-id={analyticsId}
   hidden
   aria-label="Cookie consent settings"
 >
@@ -33,12 +34,12 @@ const { policyHref = "/privacy", analyticsId = "G-6ZD3YD2STD" } = Astro.props;
   </div>
 </aside>
 
-<script is:inline define:vars={{ analyticsId }}>
+<script is:inline>
   (() => {
     const STORAGE_KEY = "toyb-consent";
-    const ANALYTICS_ID = analyticsId;
     const banner = document.querySelector("[data-consent-banner]");
     if (!banner) return;
+    const ANALYTICS_ID = banner.getAttribute("data-analytics-id") ?? "";
 
     const loadAnalytics = () => {
       if (window.__toybAnalyticsLoaded) return;
@@ -46,8 +47,8 @@ const { policyHref = "/privacy", analyticsId = "G-6ZD3YD2STD" } = Astro.props;
       window.dataLayer = window.dataLayer || [];
       window.gtag =
         window.gtag ||
-        function gtag() {
-          window.dataLayer.push(arguments);
+        function gtag(...args) {
+          window.dataLayer.push(args);
         };
 
       const script = document.createElement("script");

@@ -1,6 +1,4 @@
-import {
-  verifyUnsubscribeToken,
-} from "./unsubscribe-token.js";
+import { verifyUnsubscribeToken } from "./unsubscribe-token.js";
 import { trackServerEvent } from "./server-analytics.js";
 
 const INVALID_ATTEMPT_WINDOW_MS = 10 * 60 * 1000;
@@ -49,7 +47,8 @@ export async function handleUnsubscribeRequest({
     return { status: 500, body: { status: "error", error: "server_error" } };
   }
 
-  const ipSalt = cleanString(env.WAITLIST_IP_SALT) || "unsubscribe-default-salt";
+  const ipSalt =
+    cleanString(env.WAITLIST_IP_SALT) || "unsubscribe-default-salt";
   const ip = cleanString(requestMeta.ip) || "unknown";
   const ipHash = await sha256Hex(`${ip}:${ipSalt}`);
 

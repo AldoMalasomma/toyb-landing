@@ -51,7 +51,12 @@ export const signUnsubscribeToken = async ({ secret, email, scope, ts }) => {
   const normalizedScope = normalizeScope(scope);
   const parsedTs = parseUnixSeconds(ts);
 
-  if (!normalizedSecret || !normalizedEmail || !normalizedScope || parsedTs === null) {
+  if (
+    !normalizedSecret ||
+    !normalizedEmail ||
+    !normalizedScope ||
+    parsedTs === null
+  ) {
     throw new Error("invalid_unsubscribe_signature_input");
   }
 
@@ -95,7 +100,13 @@ export const verifyUnsubscribeToken = async ({
   const parsedTs = parseUnixSeconds(ts);
   const parsedNow = parseUnixSeconds(nowSeconds);
 
-  if (!normalizedSecret || !normalizedEmail || !normalizedScope || parsedTs === null || parsedNow === null) {
+  if (
+    !normalizedSecret ||
+    !normalizedEmail ||
+    !normalizedScope ||
+    parsedTs === null ||
+    parsedNow === null
+  ) {
     return { ok: false, reason: "invalid" };
   }
 
