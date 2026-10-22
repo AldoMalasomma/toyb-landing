@@ -17,7 +17,7 @@
     "test:waitlist": "node scripts/test-waitlist.mjs",
     "test:email": "node scripts/test-email.mjs",
     "test:a11y": "node scripts/test-a11y.mjs",
-    "deploy": "npm run build && wrangler deploy --config dist/server/wrangler.json"
+    "deploy": "npm run build && wrangler deploy --config dist/server/wrangler.json --keep-vars"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.2",

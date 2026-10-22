@@ -3,6 +3,13 @@
   "name": "toyb-landing-workers",
   "compatibility_date": "2026-10-19",
   "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "SUPABASE_ANON_KEY": "sb_publishable_7MUsKEbTdssLBwa1lJfbg_if-rS6ER",
+    "SUPABASE_URL": "https://ylamxtkggfulcctrzmbu.supabase.co",
+    "WAITLIST_FROM": "Toyb <hello@toyb.space>",
+    "WAITLIST_RATE_LIMITER_REQUIRED": "true",
+    "WAITLIST_TEST_ENABLED": "false",
+  },
   "assets": {
     "directory": "./dist/client",
     "binding": "ASSETS",
