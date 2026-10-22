@@ -1,4 +1,5 @@
 import type { APIContext, APIRoute } from "astro";
+import { getCloudflareEnv } from "../../lib/cloudflare-env.js";
 import {
   getEmailProvider,
   sendWaitlistEmail,
@@ -9,6 +10,7 @@ export const prerender = false;
 
 interface WaitlistTestRuntimeEnv extends WaitlistEmailEnv {
   WAITLIST_ADMIN_TOKEN?: string;
+  WAITLIST_TEST_ENABLED?: string;
 }
 
 interface WaitlistTestRequestBody {
@@ -58,16 +60,11 @@ const json = (
     },
   });
 
-const getRuntimeEnv = (context: APIContext): WaitlistTestRuntimeEnv => {
-  const runtime = (
-    context.locals as { runtime?: { env?: WaitlistTestRuntimeEnv } }
-  ).runtime?.env;
+const getRuntimeEnv = async (
+  context: APIContext,
+): Promise<WaitlistTestRuntimeEnv> => {
   const staticEnv = import.meta.env as unknown as WaitlistTestRuntimeEnv;
-
-  return {
-    ...staticEnv,
-    ...runtime,
-  };
+  return getCloudflareEnv(context, staticEnv);
 };
 
 const parseBodyWithLimit = async (
@@ -118,7 +115,18 @@ export const ALL: APIRoute = async () => {
 
 export const POST: APIRoute = async (context) => {
   const requestId = crypto.randomUUID();
-  const env = getRuntimeEnv(context);
+  const env = await getRuntimeEnv(context);
+  if (cleanString(env.WAITLIST_TEST_ENABLED).toLowerCase() !== "true") {
+    return json(
+      {
+        ok: false,
+        request_id: requestId,
+        email_sent: false,
+        error: "invalid_request",
+      },
+      404,
+    );
+  }
   const provider = getEmailProvider(env);
   const adminToken = cleanString(env.WAITLIST_ADMIN_TOKEN);
   const receivedAdminToken = cleanString(

@@ -5,7 +5,7 @@ import {
 } from "../../../../lib/admin-auth.js";
 import {
   cleanString,
-  getSupabaseClient,
+  getAdminSupabaseClient,
   parseJsonBody,
 } from "../../../../lib/admin-api.js";
 import {
@@ -58,11 +58,11 @@ const listCampaignRecipientEmails = async (supabase, campaignId) => {
 };
 
 export const POST = async (context) => {
-  const env = getAdminRuntimeEnv(context);
+  const env = await getAdminRuntimeEnv(context);
   const authError = requireAdminAuth(context, env);
   if (authError) return authError;
 
-  const supabase = getSupabaseClient(env);
+  const supabase = getAdminSupabaseClient(env);
   if (!supabase) {
     return adminJson({ status: "error", code: "server_error" }, 500);
   }

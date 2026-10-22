@@ -3,7 +3,10 @@
 interface ImportMetaEnv {
   readonly SUPABASE_URL?: string;
   readonly SUPABASE_ANON_KEY?: string;
+  readonly SUPABASE_SERVICE_ROLE_KEY?: string;
   readonly WAITLIST_ADMIN_TOKEN?: string;
+  readonly WAITLIST_TEST_ENABLED?: string;
+  readonly WAITLIST_RATE_LIMITER_REQUIRED?: string;
   readonly ADMIN_ALLOWED_ORIGINS?: string;
   readonly WAITLIST_ALLOWED_ORIGINS?: string;
   readonly WAITLIST_IP_SALT?: string;

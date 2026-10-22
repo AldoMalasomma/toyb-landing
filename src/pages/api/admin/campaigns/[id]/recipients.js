@@ -5,7 +5,7 @@ import {
 } from "../../../../../lib/admin-auth.js";
 import {
   cleanString,
-  getSupabaseClient,
+  getAdminSupabaseClient,
   parseInteger,
 } from "../../../../../lib/admin-api.js";
 
@@ -15,11 +15,11 @@ const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export const GET = async (context) => {
-  const env = getAdminRuntimeEnv(context);
+  const env = await getAdminRuntimeEnv(context);
   const authError = requireAdminAuth(context, env);
   if (authError) return authError;
 
-  const supabase = getSupabaseClient(env);
+  const supabase = getAdminSupabaseClient(env);
   if (!supabase) {
     return adminJson({ status: "error", code: "server_error" }, 500);
   }

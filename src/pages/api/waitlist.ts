@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import type { APIContext, APIRoute } from "astro";
 import { sendWaitlistEmail, type WaitlistEmailEnv } from "../../lib/email";
+import { getCloudflareEnv } from "../../lib/cloudflare-env.js";
+import { consumeDistributedRateLimit } from "../../lib/distributed-rate-limit.js";
 import { handleWaitlistSubmission } from "../../lib/waitlist-service.js";
 import { upsertWaitlistWithCompatibility } from "../../lib/waitlist-supabase.js";
 
@@ -13,6 +15,15 @@ interface WaitlistRuntimeEnv extends WaitlistEmailEnv {
   WAITLIST_ALLOWED_ORIGINS?: string;
   WAITLIST_UNSUBSCRIBE_SECRET?: string;
   WAITLIST_UNSUBSCRIBE_BASE_URL?: string;
+  WAITLIST_RATE_LIMITER_REQUIRED?: string;
+  TOYB_RATE_LIMIT_KV?: {
+    get?: (key: string, type: "json") => Promise<{ count?: number } | null>;
+    put?: (
+      key: string,
+      value: string,
+      options: { expirationTtl: number },
+    ) => Promise<void>;
+  };
 }
 
 interface WaitlistPayload {
@@ -131,15 +142,10 @@ const parseBodyWithLimit = async (
   return new TextDecoder().decode(merged);
 };
 
-const getRuntimeEnv = (context: APIContext): WaitlistRuntimeEnv => {
-  const runtime = (context.locals as { runtime?: { env?: WaitlistRuntimeEnv } })
-    .runtime?.env;
-  const staticEnv = import.meta.env as unknown as WaitlistRuntimeEnv;
-  return {
-    ...staticEnv,
-    ...runtime,
-  };
-};
+const getRuntimeEnv = async (
+  context: APIContext,
+): Promise<WaitlistRuntimeEnv> =>
+  getCloudflareEnv(context, import.meta.env as unknown as WaitlistRuntimeEnv);
 
 const getClientIp = (request: Request): string => {
   const cfIp = cleanString(request.headers.get("cf-connecting-ip"));
@@ -155,7 +161,7 @@ const getClientIp = (request: Request): string => {
 };
 
 export const OPTIONS: APIRoute = async (context) => {
-  const env = getRuntimeEnv(context);
+  const env = await getRuntimeEnv(context);
   const allowedOrigins = parseAllowedOrigins(
     cleanString(env.WAITLIST_ALLOWED_ORIGINS),
   );
@@ -181,7 +187,7 @@ export const ALL: APIRoute = async (context) => {
 };
 
 export const POST: APIRoute = async (context) => {
-  const env = getRuntimeEnv(context);
+  const env = await getRuntimeEnv(context);
   const supabaseUrl = cleanString(env.SUPABASE_URL);
   const supabaseAnonKey = cleanString(env.SUPABASE_ANON_KEY);
 
@@ -242,6 +248,15 @@ export const POST: APIRoute = async (context) => {
     env,
     deps: {
       rateLimitStore,
+      consumeRateLimit: (key) =>
+        consumeDistributedRateLimit({
+          kv: env.TOYB_RATE_LIMIT_KV,
+          key: `waitlist:${key}`,
+          required: env.WAITLIST_RATE_LIMITER_REQUIRED,
+          fallbackStore: rateLimitStore,
+          maxRequests: 8,
+          windowMs: 10 * 60 * 1000,
+        }),
       upsertWaitlist: async (input) => {
         return upsertWaitlistWithCompatibility({
           supabase,

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/AldoMalasomma/toyb-landing/actions/workflows/ci.yml/badge.svg)](https://github.com/AldoMalasomma/toyb-landing/actions/workflows/ci.yml)
 
-Astro-based marketing and policy site for **Toyb**, with an accessibility-first baseline, CI quality checks, and Cloudflare Pages deployment.
+Astro-based marketing and policy site for **Toyb**, with an accessibility-first baseline, CI quality checks, and Cloudflare Workers deployment.
 
 ## Stack
 
@@ -33,17 +33,18 @@ npm run dev
 | `npm run test:waitlist` | Run waitlist smoke script (server required) |
 | `npm run test:email`    | Call protected `/api/waitlist-test`         |
 | `npm run test:a11y`     | Run axe-core checks on built pages          |
-| `npm run deploy`        | One-command Cloudflare Pages deploy         |
+| `npm run deploy`        | One-command Cloudflare Workers deploy       |
 
 ## Waitlist backend
 
 - API route: `POST /api/waitlist`
-- Admin test route: `POST /api/waitlist-test` (header `X-Admin-Token`)
+- Admin test route: `POST /api/waitlist-test` (disabled unless `WAITLIST_TEST_ENABLED=true`)
 - Admin APIs: `GET|POST /api/admin/*` (header `Authorization: Bearer <WAITLIST_ADMIN_TOKEN>`)
-- Unsubscribe page: `GET /unsubscribe?email=...&scope=...&ts=...&sig=...`
+- Unsubscribe page: `GET /unsubscribe?token=...` (opaque encrypted token)
 - Unsubscribe API: `GET|POST /api/unsubscribe`
 - Stores emails in Supabase table `waitlist`
-- Uses Supabase RPC + RLS with `SUPABASE_ANON_KEY` (no service-role key in app runtime)
+- Public routes use Supabase RPC + RLS with `SUPABASE_ANON_KEY`.
+- Administrative routes use `SUPABASE_SERVICE_ROLE_KEY` server-side only; it must never be exposed to browser code.
 - Sends waitlist email using:
   - `EMAIL_PROVIDER=mock` (local/dev/tests, no network call)
   - `EMAIL_PROVIDER=resend` + `RESEND_API_KEY` (production)
@@ -55,6 +56,18 @@ Required env vars (see `.env.example`):
 
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only, required by `/api/admin/*`)
+- `TOYB_RATE_LIMIT_KV` (Cloudflare KV namespace binding for public endpoint rate limiting)
+- `WAITLIST_RATE_LIMITER_REQUIRED=true` in production
+
+### Cloudflare deployment
+
+This project uses Astro SSR and `@astrojs/cloudflare` v14, which deploys to
+Cloudflare Workers. Cloudflare Pages is not supported by this adapter version.
+The repository includes `wrangler.jsonc` for a separate Workers deployment;
+attach the existing `TOYB_RATE_LIMIT_KV` namespace to that Worker before
+cutting over the production domain.
+
 - `WAITLIST_ADMIN_TOKEN`
 - `ADMIN_ALLOWED_ORIGINS` (exact comma-separated origins only, no wildcards)
 - `WAITLIST_FROM`
@@ -90,7 +103,7 @@ WAITLIST_ADMIN_TOKEN=... WAITLIST_TEST_EMAIL=you@example.com npm run test:email
 Unsubscribe page manual QA:
 
 1. Open `/unsubscribe` without query params -> page shows `Link non valido o scaduto`.
-2. Open `/unsubscribe?email=...&scope=marketing&ts=...&sig=...` with a valid signed token -> page calls `POST /api/unsubscribe` and shows `Sei stato disiscritto`.
+2. Open `/unsubscribe?token=...` with a valid opaque token -> page calls `POST /api/unsubscribe` and shows `Sei stato disiscritto`.
 
 ## Admin console
 
@@ -100,6 +113,7 @@ Unsubscribe page manual QA:
 - `/admin/campaigns` campaign composer
 - `/admin/campaigns/:id` campaign detail
 - All admin APIs require `Authorization: Bearer <WAITLIST_ADMIN_TOKEN>`.
+- Admin RPCs are executable only by the server-side `service_role`; public Supabase roles must not have `EXECUTE`.
 - Admin same-origin check uses `ADMIN_ALLOWED_ORIGINS` exact matches.
 - Admin pages are marked `noindex,nofollow`.
 - Campaign safety guard: recipient selection always enforces `marketing_consent=true` and `unsubscribed_at is null`.
@@ -303,7 +317,7 @@ Runs on push and pull request:
 6. `npx playwright install --with-deps chromium`
 7. `npm run test:a11y`
 
-## Deploy to Cloudflare Pages
+## Deploy to Cloudflare Workers
 
 Workflow: `.github/workflows/deploy.yml`
 
@@ -314,13 +328,14 @@ Workflow: `.github/workflows/deploy.yml`
 
 ### Required GitHub variable
 
-- `CLOUDFLARE_PAGES_PROJECT` (example: `toyb`)
+- `CLOUDFLARE_WORKER_NAME` (example: `toyb-landing-workers`)
 
 ## Preview deploys
 
 Workflow: `.github/workflows/deploy-preview.yml`
 
-This workflow deploys `codex/**` branches to a separate Cloudflare Pages project so you can test a fix without overwriting production.
+The Workers migration is deployed manually from its dedicated branch so the
+existing Pages project and production domain are not changed automatically.
 
 ### Required GitHub secrets
 
@@ -336,19 +351,19 @@ This workflow deploys `codex/**` branches to a separate Cloudflare Pages project
 - Preview deploys still use whatever Cloudflare runtime variables you configure for that project.
 - If you want full isolation from production data, duplicate the Supabase and email variables into the preview project too.
 
-### Domain setup (`toyb.space`)
+### Domain cutover (`toyb.space`)
 
-In Cloudflare Pages project settings:
+After validation, attach `toyb.space` to the new Worker route/custom domain:
 
-1. Add custom domain `toyb.space`.
-2. Configure `www.toyb.space` as an alias or redirect to `toyb.space`.
-3. Configure DNS records in Cloudflare.
-4. Ensure HTTPS is active.
+1. Keep the existing Pages project untouched during validation.
+2. Add `toyb.space` to the Worker custom domain or route.
+3. Configure `www.toyb.space` as an alias or redirect to `toyb.space`.
+4. Ensure HTTPS is active, then remove the old Pages route only after verification.
 
 ### Local one-command deploy
 
 ```bash
-CLOUDFLARE_PAGES_PROJECT=toyb npm run deploy
+CLOUDFLARE_WORKER_NAME=toyb-landing-workers npm run deploy
 ```
 
-This command builds the site and runs `wrangler pages deploy dist`.
+This command builds the site and runs `wrangler deploy --config dist/server/wrangler.json`.

@@ -6,8 +6,8 @@ Documento tecnico di stato per il progetto `toyb.space` (landing, pagine legali,
 
 ## 1) Scope
 
-- Framework: Astro 5
-- Runtime deploy: Cloudflare Pages/Workers (`@astrojs/cloudflare`)
+- Framework: Astro 7
+- Runtime deploy: Cloudflare Workers (`@astrojs/cloudflare`)
 - Output Astro: `server`
 - Obiettivo: sito marketing + backend waitlist + console admin interna
 
@@ -18,6 +18,7 @@ Documento tecnico di stato per il progetto `toyb.space` (landing, pagine legali,
 - ESLint + Prettier
 - `@astrojs/sitemap`
 - Supabase (`@supabase/supabase-js`) per storage e RPC
+- `SUPABASE_ANON_KEY` per le operazioni pubbliche e `SUPABASE_SERVICE_ROLE_KEY` esclusivamente lato server per le API admin
 - Resend API (o provider `mock`) per email
 - Playwright + axe-core per smoke a11y
 
@@ -269,11 +270,11 @@ Indicizzazione:
 7. `npx playwright install --with-deps chromium`
 8. `npm run test:a11y`
 
-### Deploy (`.github/workflows/deploy.yml`)
+### Deploy (`.github/workflows/deploy-workers.yml`)
 
-- Trigger: push su `main` + manual dispatch
+- Trigger: manual dispatch from the Workers migration branch
 - Build Astro
-- Deploy `dist` su Cloudflare Pages via `wrangler-action`
+- Deploy the generated Worker and `dist/client` assets via `wrangler-action`
 
 ## 13) Script utili
 

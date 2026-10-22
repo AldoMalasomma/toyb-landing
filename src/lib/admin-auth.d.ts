@@ -7,7 +7,7 @@ export interface AdminAuthEnv {
 
 export function getAdminRuntimeEnv<T extends object>(
   context: APIContext,
-): T & AdminAuthEnv;
+): Promise<T & AdminAuthEnv>;
 
 export function requireAdminAuth(
   context: APIContext,

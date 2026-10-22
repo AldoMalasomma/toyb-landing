@@ -71,14 +71,8 @@ const isSameOrigin = (request, allowedOrigins) => {
   }
 };
 
-export const getAdminRuntimeEnv = (context) => {
-  const runtime = context.locals?.runtime?.env;
-  const staticEnv = import.meta.env;
-  return {
-    ...staticEnv,
-    ...runtime,
-  };
-};
+export const getAdminRuntimeEnv = (context) =>
+  getCloudflareEnv(context, import.meta.env);
 
 export const requireAdminAuth = (context, env) => {
   const allowedOrigins = parseAllowedOrigins(env.ADMIN_ALLOWED_ORIGINS);
@@ -107,3 +101,4 @@ export const requireAdminAuth = (context, env) => {
 };
 
 export const adminJson = json;
+import { getCloudflareEnv } from "./cloudflare-env.js";

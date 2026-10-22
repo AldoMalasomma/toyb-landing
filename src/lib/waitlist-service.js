@@ -184,8 +184,22 @@ export async function handleWaitlistSubmission({
   const ipSalt = cleanString(env.WAITLIST_IP_SALT) || "waitlist-default-salt";
   const ipHash = await makeIpHash(ip, ipSalt);
 
-  const rateLimitStore = deps.rateLimitStore ?? new Map();
-  if (isRateLimited(rateLimitStore, ipHash)) {
+  const rateLimitResult = deps.consumeRateLimit
+    ? await deps.consumeRateLimit(ipHash)
+    : {
+        available: true,
+        limited: isRateLimited(deps.rateLimitStore ?? new Map(), ipHash),
+      };
+
+  if (!rateLimitResult.available) {
+    return {
+      status: 503,
+      body: { status: "error", code: "rate_limiter_unavailable" },
+      origin,
+    };
+  }
+
+  if (rateLimitResult.limited) {
     return {
       status: 429,
       body: { status: "error", code: "rate_limited" },

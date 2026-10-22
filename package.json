@@ -17,13 +17,13 @@
     "test:waitlist": "node scripts/test-waitlist.mjs",
     "test:email": "node scripts/test-email.mjs",
     "test:a11y": "node scripts/test-a11y.mjs",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name \"${CLOUDFLARE_PAGES_PROJECT:-toyb}\""
+    "deploy": "npm run build && wrangler deploy --config dist/server/wrangler.json"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/cloudflare": "^14.4.2",
     "@astrojs/sitemap": "^3.7.0",
     "@supabase/supabase-js": "^2.97.0",
-    "astro": "^5.17.3"
+    "astro": "^7.4.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",

@@ -4,13 +4,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 export const prerender = false;
 
 const url = new URL(Astro.request.url);
-const email = url.searchParams.get("email")?.trim() ?? "";
-const scope = url.searchParams.get("scope")?.trim() ?? "";
-const ts = url.searchParams.get("ts")?.trim() ?? "";
-const sig = url.searchParams.get("sig")?.trim() ?? "";
+const token = url.searchParams.get("token")?.trim() ?? "";
 
-const hasRequiredParams =
-  email.length > 0 && scope.length > 0 && ts.length > 0 && sig.length > 0;
+const hasRequiredParams = token.length > 0;
 
 let state: "success" | "invalid" = "invalid";
 
@@ -22,12 +18,7 @@ if (hasRequiredParams) {
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({
-        email,
-        scope,
-        ts,
-        sig,
-      }),
+      body: JSON.stringify({ token }),
     });
 
     const body = (await response.json().catch(() => null)) as {
