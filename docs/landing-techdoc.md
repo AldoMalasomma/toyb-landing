@@ -18,6 +18,7 @@ Documento tecnico di stato per il progetto `toyb.space` (landing, pagine legali,
 - ESLint + Prettier
 - `@astrojs/sitemap`
 - Supabase (`@supabase/supabase-js`) per storage e RPC
+- `SUPABASE_ANON_KEY` per le operazioni pubbliche e `SUPABASE_SERVICE_ROLE_KEY` esclusivamente lato server per le API admin
 - Resend API (o provider `mock`) per email
 - Playwright + axe-core per smoke a11y
 

@@ -52,8 +52,27 @@ export async function handleUnsubscribeRequest({
   const ip = cleanString(requestMeta.ip) || "unknown";
   const ipHash = await sha256Hex(`${ip}:${ipSalt}`);
 
+  const rateLimitResult = deps.consumeRateLimit
+    ? await deps.consumeRateLimit(ipHash)
+    : { available: true, limited: false };
+
+  if (!rateLimitResult.available) {
+    return {
+      status: 503,
+      body: { status: "error", error: "rate_limiter_unavailable" },
+    };
+  }
+
+  if (rateLimitResult.limited) {
+    return {
+      status: 429,
+      body: { status: "error", error: "rate_limited" },
+    };
+  }
+
   const verified = await verifyUnsubscribeToken({
     secret: unsubscribeSecret,
+    token: query.token,
     email: query.email,
     scope: query.scope,
     ts: query.ts,

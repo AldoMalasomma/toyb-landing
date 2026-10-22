@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { APIContext, APIRoute } from "astro";
 import { handleUnsubscribeRequest } from "../../lib/unsubscribe-service.js";
+import { consumeDistributedRateLimit } from "../../lib/distributed-rate-limit.js";
 
 export const prerender = false;
 
@@ -9,6 +10,15 @@ interface UnsubscribeRuntimeEnv {
   SUPABASE_ANON_KEY?: string;
   WAITLIST_IP_SALT?: string;
   WAITLIST_UNSUBSCRIBE_SECRET?: string;
+  WAITLIST_RATE_LIMITER_REQUIRED?: string;
+  TOYB_RATE_LIMIT_KV?: {
+    get?: (key: string, type: "json") => Promise<{ count?: number } | null>;
+    put?: (
+      key: string,
+      value: string,
+      options: { expirationTtl: number },
+    ) => Promise<void>;
+  };
 }
 
 const cleanString = (value: unknown): string =>
@@ -90,7 +100,13 @@ const MAX_BODY_BYTES = 2 * 1024;
 
 const runUnsubscribe = async (
   context: APIContext,
-  payload: { email?: string; scope?: string; ts?: string; sig?: string },
+  payload: {
+    token?: string;
+    email?: string;
+    scope?: string;
+    ts?: string;
+    sig?: string;
+  },
 ): Promise<Response> => {
   const env = getRuntimeEnv(context);
   const supabaseUrl = cleanString(env.SUPABASE_URL);
@@ -134,6 +150,15 @@ const runUnsubscribe = async (
     env,
     deps: {
       invalidAttemptStore,
+      consumeRateLimit: (key) =>
+        consumeDistributedRateLimit({
+          kv: env.TOYB_RATE_LIMIT_KV,
+          key: `unsubscribe:${key}`,
+          required: env.WAITLIST_RATE_LIMITER_REQUIRED,
+          fallbackStore: invalidAttemptStore,
+          maxRequests: 12,
+          windowMs: 10 * 60 * 1000,
+        }),
       applyUnsubscribe: async (input) => {
         const { error } = await supabase.rpc("waitlist_apply_unsubscribe", {
           p_email: input.email,
@@ -153,6 +178,7 @@ const runUnsubscribe = async (
 export const GET: APIRoute = async (context) => {
   const url = new URL(context.request.url);
   return runUnsubscribe(context, {
+    token: url.searchParams.get("token") ?? undefined,
     email: url.searchParams.get("email") ?? undefined,
     scope: url.searchParams.get("scope") ?? undefined,
     ts: url.searchParams.get("ts") ?? undefined,
@@ -174,6 +200,7 @@ export const POST: APIRoute = async (context) => {
   }
 
   let payload: {
+    token?: unknown;
     email?: unknown;
     scope?: unknown;
     ts?: unknown;
@@ -181,6 +208,7 @@ export const POST: APIRoute = async (context) => {
   };
   try {
     payload = JSON.parse(bodyText) as {
+      token?: unknown;
       email?: unknown;
       scope?: unknown;
       ts?: unknown;
@@ -191,6 +219,7 @@ export const POST: APIRoute = async (context) => {
   }
 
   return runUnsubscribe(context, {
+    token: toParamString(payload.token) || undefined,
     email: toParamString(payload.email) || undefined,
     scope: toParamString(payload.scope) || undefined,
     ts: toParamString(payload.ts) || undefined,

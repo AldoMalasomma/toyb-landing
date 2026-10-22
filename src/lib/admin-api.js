@@ -75,15 +75,15 @@ export const parseJsonBody = async (
   }
 };
 
-export const getSupabaseClient = (env) => {
+export const getAdminSupabaseClient = (env) => {
   const supabaseUrl = cleanString(env.SUPABASE_URL);
-  const supabaseAnonKey = cleanString(env.SUPABASE_ANON_KEY);
+  const supabaseServiceRoleKey = cleanString(env.SUPABASE_SERVICE_ROLE_KEY);
 
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
     return null;
   }
 
-  return createClient(supabaseUrl, supabaseAnonKey, {
+  return createClient(supabaseUrl, supabaseServiceRoleKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

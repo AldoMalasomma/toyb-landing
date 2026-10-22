@@ -41,6 +41,7 @@ This project includes:
 3. Copy project credentials:
    - `SUPABASE_URL`
    - `SUPABASE_ANON_KEY` (server-side use in API route)
+   - `SUPABASE_SERVICE_ROLE_KEY` (server-only; required for `/api/admin/*`)
 
 ## 2) Email setup (Resend)
 
@@ -57,10 +58,14 @@ Set these in Cloudflare Pages/Workers environment variables (Production + Previe
 
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only; never expose with a `PUBLIC_` prefix)
 - `RESEND_API_KEY`
 - `WAITLIST_FROM`
 - `WAITLIST_IP_SALT`
-- `WAITLIST_ADMIN_TOKEN` (server-only, protects `/api/waitlist-test`)
+- `WAITLIST_ADMIN_TOKEN` (server-only, protects admin APIs)
+- `WAITLIST_TEST_ENABLED=false` (keep false in production; enables `/api/waitlist-test` only for controlled testing)
+- `WAITLIST_RATE_LIMITER_REQUIRED=true` in production
+- `TOYB_RATE_LIMIT_KV` Cloudflare KV namespace binding used by waitlist and unsubscribe endpoints
 - optional: `WAITLIST_EMAIL_PROVIDER`
 - optional: `WAITLIST_SEND_ON_DUPLICATE` (`true`/`false`, default `false`)
 - optional: `WAITLIST_TURNSTILE_ENABLED` (`true`/`false`, default `false`)
@@ -135,13 +140,13 @@ WAITLIST_ADMIN_TOKEN=... WAITLIST_TEST_EMAIL=you@example.com npm run test:email
 All communications:
 
 ```bash
-curl -i "http://localhost:4321/api/unsubscribe?email=hello@example.com&scope=all"
+curl -i "http://localhost:4321/api/unsubscribe?token=<opaque-token>"
 ```
 
 Only marketing/newsletter:
 
 ```bash
-curl -i "http://localhost:4321/api/unsubscribe?email=hello@example.com&scope=marketing"
+curl -i "http://localhost:4321/api/unsubscribe?token=<opaque-token>"
 ```
 
 Response includes:

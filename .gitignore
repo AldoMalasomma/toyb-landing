@@ -18,6 +18,7 @@ pnpm-debug.log*
 .env
 .env.production
 .env.*
+!.env.example
 
 # macOS-specific files
 .DS_Store
@@ -36,3 +37,6 @@ experimental/toy-procedural-prototype/
 .wrangler/
 playwright-report/
 test-results/
+
+# local private material; never commit to GitHub
+/private/
