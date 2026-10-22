@@ -9,7 +9,7 @@ import { chromium } from "playwright";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
-const distDir = path.join(projectRoot, "dist");
+const distDir = path.join(projectRoot, "dist", "client");
 const port = Number(process.env.A11Y_PORT || 4173);
 
 const routes = ["/", "/privacy", "/accessibility", "/terms", "/imprint"];

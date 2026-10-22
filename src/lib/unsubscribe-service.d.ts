@@ -1,4 +1,5 @@
 export interface UnsubscribeQuery {
+  token?: string;
   email?: string;
   scope?: string;
   ts?: string;
@@ -20,6 +21,9 @@ export interface UnsubscribeServiceDeps {
     scope: "all" | "marketing";
   }) => Promise<void>;
   invalidAttemptStore?: Map<string, { count: number; resetAt: number }>;
+  consumeRateLimit?: (
+    key: string,
+  ) => Promise<{ available: boolean; limited: boolean }>;
 }
 
 export interface UnsubscribeServiceResult {
@@ -28,7 +32,12 @@ export interface UnsubscribeServiceResult {
     | { status: "ok" }
     | {
         status: "error";
-        error: "invalid_signature" | "expired" | "server_error";
+        error:
+          | "invalid_signature"
+          | "expired"
+          | "server_error"
+          | "rate_limited"
+          | "rate_limiter_unavailable";
       };
 }
 

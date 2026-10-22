@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { APIContext, APIRoute } from "astro";
 import { sendWaitlistEmail, type WaitlistEmailEnv } from "../../lib/email";
+import { consumeDistributedRateLimit } from "../../lib/distributed-rate-limit.js";
 import { handleWaitlistSubmission } from "../../lib/waitlist-service.js";
 import { upsertWaitlistWithCompatibility } from "../../lib/waitlist-supabase.js";
 
@@ -13,6 +14,15 @@ interface WaitlistRuntimeEnv extends WaitlistEmailEnv {
   WAITLIST_ALLOWED_ORIGINS?: string;
   WAITLIST_UNSUBSCRIBE_SECRET?: string;
   WAITLIST_UNSUBSCRIBE_BASE_URL?: string;
+  WAITLIST_RATE_LIMITER_REQUIRED?: string;
+  TOYB_RATE_LIMIT_KV?: {
+    get?: (key: string, type: "json") => Promise<{ count?: number } | null>;
+    put?: (
+      key: string,
+      value: string,
+      options: { expirationTtl: number },
+    ) => Promise<void>;
+  };
 }
 
 interface WaitlistPayload {
@@ -242,6 +252,15 @@ export const POST: APIRoute = async (context) => {
     env,
     deps: {
       rateLimitStore,
+      consumeRateLimit: (key) =>
+        consumeDistributedRateLimit({
+          kv: env.TOYB_RATE_LIMIT_KV,
+          key: `waitlist:${key}`,
+          required: env.WAITLIST_RATE_LIMITER_REQUIRED,
+          fallbackStore: rateLimitStore,
+          maxRequests: 8,
+          windowMs: 10 * 60 * 1000,
+        }),
       upsertWaitlist: async (input) => {
         return upsertWaitlistWithCompatibility({
           supabase,

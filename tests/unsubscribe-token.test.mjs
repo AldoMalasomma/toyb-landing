@@ -92,5 +92,15 @@ test("buildSignedUnsubscribeUrl points to /unsubscribe", async () => {
 
   const parsed = new URL(url);
   assert.equal(parsed.pathname, "/unsubscribe");
-  assert.equal(parsed.searchParams.get("email"), "user@example.com");
+  assert.equal(parsed.searchParams.has("email"), false);
+  assert.equal(parsed.searchParams.has("token"), true);
+
+  const result = await verifyUnsubscribeToken({
+    secret: "token-test-secret",
+    token: parsed.searchParams.get("token"),
+    nowSeconds: 1_700_000_010,
+  });
+
+  assert.equal(result.ok, true);
+  if (result.ok) assert.equal(result.email, "user@example.com");
 });

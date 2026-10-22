@@ -45,6 +45,68 @@ const hmacSha256Hex = async (secret, payload) => {
   return bytesToHex(new Uint8Array(signature));
 };
 
+const bytesToBase64Url = (bytes) => {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary)
+    .replaceAll("+", "-")
+    .replaceAll("/", "_")
+    .replace(/=+$/u, "");
+};
+
+const base64UrlToBytes = (value) => {
+  const normalized = value.replaceAll("-", "+").replaceAll("_", "/");
+  const padded = normalized + "=".repeat((4 - (normalized.length % 4)) % 4);
+  const binary = atob(padded);
+  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+};
+
+const importEncryptionKey = async (secret, usages) => {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    textEncoder.encode(secret),
+  );
+  return crypto.subtle.importKey(
+    "raw",
+    digest,
+    { name: "AES-GCM" },
+    false,
+    usages,
+  );
+};
+
+const createOpaqueToken = async ({ secret, email, scope, ts }) => {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await importEncryptionKey(secret, ["encrypt"]);
+  const payload = JSON.stringify({ email, scope, ts });
+  const ciphertext = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv },
+    key,
+    textEncoder.encode(payload),
+  );
+  return `v1.${bytesToBase64Url(iv)}.${bytesToBase64Url(new Uint8Array(ciphertext))}`;
+};
+
+const decryptOpaqueToken = async (secret, token) => {
+  const parts = cleanString(token).split(".");
+  if (parts.length !== 3 || parts[0] !== "v1") return null;
+
+  try {
+    const iv = base64UrlToBytes(parts[1]);
+    const ciphertext = base64UrlToBytes(parts[2]);
+    if (iv.length !== 12 || ciphertext.length < 16) return null;
+    const key = await importEncryptionKey(secret, ["decrypt"]);
+    const plaintext = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv },
+      key,
+      ciphertext,
+    );
+    return JSON.parse(new TextDecoder().decode(plaintext));
+  } catch {
+    return null;
+  }
+};
+
 export const signUnsubscribeToken = async ({ secret, email, scope, ts }) => {
   const normalizedSecret = normalizeSecret(secret);
   const normalizedEmail = normalizeEmail(email);
@@ -87,6 +149,7 @@ export const timingSafeHexEqual = (expectedHex, providedHex) => {
 
 export const verifyUnsubscribeToken = async ({
   secret,
+  token,
   email,
   scope,
   ts,
@@ -95,9 +158,12 @@ export const verifyUnsubscribeToken = async ({
   ttlSeconds = UNSUBSCRIBE_TTL_SECONDS,
 }) => {
   const normalizedSecret = normalizeSecret(secret);
-  const normalizedEmail = normalizeEmail(email);
-  const normalizedScope = normalizeScope(scope);
-  const parsedTs = parseUnixSeconds(ts);
+  const opaquePayload = token
+    ? await decryptOpaqueToken(normalizedSecret, token)
+    : null;
+  const normalizedEmail = normalizeEmail(opaquePayload?.email ?? email);
+  const normalizedScope = normalizeScope(opaquePayload?.scope ?? scope);
+  const parsedTs = parseUnixSeconds(opaquePayload?.ts ?? ts);
   const parsedNow = parseUnixSeconds(nowSeconds);
 
   if (
@@ -116,6 +182,15 @@ export const verifyUnsubscribeToken = async ({
 
   if (parsedNow - parsedTs > ttlSeconds) {
     return { ok: false, reason: "expired" };
+  }
+
+  if (opaquePayload) {
+    return {
+      ok: true,
+      email: normalizedEmail,
+      scope: normalizedScope,
+      ts: parsedTs,
+    };
   }
 
   let expected;
@@ -149,6 +224,7 @@ export const buildSignedUnsubscribeUrl = async ({
   scope = "marketing",
   ts = Math.floor(Date.now() / 1000),
 }) => {
+  const normalizedSecret = normalizeSecret(secret);
   const normalizedEmail = normalizeEmail(email);
   const normalizedScope = normalizeScope(scope);
 
@@ -156,17 +232,14 @@ export const buildSignedUnsubscribeUrl = async ({
     throw new Error("invalid_unsubscribe_url_input");
   }
 
-  const signature = await signUnsubscribeToken({
-    secret,
+  const token = await createOpaqueToken({
+    secret: normalizedSecret,
     email: normalizedEmail,
     scope: normalizedScope,
     ts,
   });
 
   const url = new URL("/unsubscribe", baseUrl);
-  url.searchParams.set("email", normalizedEmail);
-  url.searchParams.set("scope", normalizedScope);
-  url.searchParams.set("ts", String(ts));
-  url.searchParams.set("sig", signature);
+  url.searchParams.set("token", token);
   return url.toString();
 };

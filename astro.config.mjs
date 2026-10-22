@@ -8,11 +8,9 @@ export default defineConfig({
   site: "https://toyb.space/",
   output: "server",
   adapter: cloudflare(),
+  session: false,
   build: {
     inlineStylesheets: "always",
-  },
-  session: {
-    driver: "memory",
   },
   integrations: [
     sitemap({

@@ -41,6 +41,9 @@ export interface WaitlistServiceDeps {
     unsubscribeUrl: string;
   }) => Promise<{ ok: boolean; error_code?: string }>;
   rateLimitStore?: Map<string, { count: number; resetAt: number }>;
+  consumeRateLimit?: (
+    key: string,
+  ) => Promise<{ available: boolean; limited: boolean }>;
 }
 
 export interface WaitlistServiceResult {

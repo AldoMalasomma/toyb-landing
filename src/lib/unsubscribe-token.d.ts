@@ -9,10 +9,11 @@ export interface SignUnsubscribeTokenInput {
 
 export interface VerifyUnsubscribeTokenInput {
   secret: string;
-  email: string;
-  scope: string;
-  ts: string | number;
-  sig: string;
+  token?: string;
+  email?: string;
+  scope?: string;
+  ts?: string | number;
+  sig?: string;
   nowSeconds?: number;
   ttlSeconds?: number;
 }

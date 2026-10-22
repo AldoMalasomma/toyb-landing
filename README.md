@@ -38,12 +38,13 @@ npm run dev
 ## Waitlist backend
 
 - API route: `POST /api/waitlist`
-- Admin test route: `POST /api/waitlist-test` (header `X-Admin-Token`)
+- Admin test route: `POST /api/waitlist-test` (disabled unless `WAITLIST_TEST_ENABLED=true`)
 - Admin APIs: `GET|POST /api/admin/*` (header `Authorization: Bearer <WAITLIST_ADMIN_TOKEN>`)
-- Unsubscribe page: `GET /unsubscribe?email=...&scope=...&ts=...&sig=...`
+- Unsubscribe page: `GET /unsubscribe?token=...` (opaque encrypted token)
 - Unsubscribe API: `GET|POST /api/unsubscribe`
 - Stores emails in Supabase table `waitlist`
-- Uses Supabase RPC + RLS with `SUPABASE_ANON_KEY` (no service-role key in app runtime)
+- Public routes use Supabase RPC + RLS with `SUPABASE_ANON_KEY`.
+- Administrative routes use `SUPABASE_SERVICE_ROLE_KEY` server-side only; it must never be exposed to browser code.
 - Sends waitlist email using:
   - `EMAIL_PROVIDER=mock` (local/dev/tests, no network call)
   - `EMAIL_PROVIDER=resend` + `RESEND_API_KEY` (production)
@@ -55,6 +56,9 @@ Required env vars (see `.env.example`):
 
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only, required by `/api/admin/*`)
+- `TOYB_RATE_LIMIT_KV` (Cloudflare KV namespace binding for public endpoint rate limiting)
+- `WAITLIST_RATE_LIMITER_REQUIRED=true` in production
 - `WAITLIST_ADMIN_TOKEN`
 - `ADMIN_ALLOWED_ORIGINS` (exact comma-separated origins only, no wildcards)
 - `WAITLIST_FROM`
@@ -90,7 +94,7 @@ WAITLIST_ADMIN_TOKEN=... WAITLIST_TEST_EMAIL=you@example.com npm run test:email
 Unsubscribe page manual QA:
 
 1. Open `/unsubscribe` without query params -> page shows `Link non valido o scaduto`.
-2. Open `/unsubscribe?email=...&scope=marketing&ts=...&sig=...` with a valid signed token -> page calls `POST /api/unsubscribe` and shows `Sei stato disiscritto`.
+2. Open `/unsubscribe?token=...` with a valid opaque token -> page calls `POST /api/unsubscribe` and shows `Sei stato disiscritto`.
 
 ## Admin console
 
@@ -100,6 +104,7 @@ Unsubscribe page manual QA:
 - `/admin/campaigns` campaign composer
 - `/admin/campaigns/:id` campaign detail
 - All admin APIs require `Authorization: Bearer <WAITLIST_ADMIN_TOKEN>`.
+- Admin RPCs are executable only by the server-side `service_role`; public Supabase roles must not have `EXECUTE`.
 - Admin same-origin check uses `ADMIN_ALLOWED_ORIGINS` exact matches.
 - Admin pages are marked `noindex,nofollow`.
 - Campaign safety guard: recipient selection always enforces `marketing_consent=true` and `unsubscribed_at is null`.
