@@ -3,12 +3,22 @@
  * tests compatible with the legacy mocked context shape.
  */
 export const getCloudflareEnv = async (context, staticEnv = {}) => {
-  const legacyRuntime = context?.locals?.runtime?.env;
-  if (legacyRuntime) return { ...staticEnv, ...legacyRuntime };
+  let legacyRuntime;
+  try {
+    legacyRuntime = context?.locals?.runtime?.env;
+  } catch {
+    legacyRuntime = undefined;
+  }
+
+  if (legacyRuntime && typeof legacyRuntime === "object") {
+    return { ...staticEnv, ...legacyRuntime };
+  }
 
   try {
     const { env } = await import("cloudflare:workers");
-    return { ...staticEnv, ...env };
+    return env && typeof env === "object"
+      ? { ...staticEnv, ...env }
+      : { ...staticEnv };
   } catch {
     return { ...staticEnv };
   }
